@@ -6,50 +6,85 @@ body {
 }
 
 .welcome{
-    margin: auto;
+    //margin: auto;
     margin-top: 100px;
     width: 600px;
     height: 400px;
     //overflow:auto;
-    border: solid;
-    border-width: 2px;
 }
-.logoslogan{
+
+.logo{
+  float: left;
   display: inline-block;
   width: 340px;
   //margin-right: 10px;
-  overflow: auto;
-}
-.credentials{
-  display: inline-block;
-  width: 250px;
-  height: 400px;
-  overflow: auto;
-}
-
-.login{
-  //margin-bottom: 6px;
-}
-.whitebox{
   //overflow: auto;
-  background-color: white;
-//  border: solid;
-//  border-width: 2px;
+
+  border:solid;
+  border-width: 2px;
 }
 
-input{
-  max-width: auto;
-}
-
-#logo{
+#ImageLogo{
   max-width:100%;
   max-height:100%;
 }
 
-.align-r{
-  text-align: right;
+
+.credentials{
+  float: right;
+  //display: inline-block;
+  width: 250px;
+  height: 400px;
+  //overflow: auto;
+
 }
+
+.login{
+  padding-top: 10px;
+  margin-bottom: 10px;
+
+}
+.whitebox{
+  overflow: auto;
+  background-color: white;
+  border: solid;
+}
+
+input{
+  float: right;
+  clear: right;
+  width: 50%;
+
+}
+
+.inputText{
+  float: left;  
+  clear: left;
+  font-size: 14px;
+  border:solid;
+}
+
+select{
+  float: left;
+  clear: left;
+  clear: right;
+  max-width: 50%;
+}
+
+.formElemmargin{
+  margin-top: 1px;
+  margin-bottom: 1px;
+
+}
+
+.align-r{
+  float: right;
+  clear: left;
+  clear: right;
+}
+
 
 .centered{
   text-align: center;
+  border:solid;
 }

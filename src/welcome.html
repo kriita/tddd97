@@ -6,35 +6,64 @@
   </head>
   <body>
     <div class="welcome">
-      <div class="logoslogan">
-        <img id="logo" src="../res/wimage.png" alt="NO FILE FOUND">
+      
+      <div class="logo">
+        <img id="Imagelogo" src="../res/wimage.png" alt="NO FILE FOUND">
       </div>
-        <div class="credentials">
-          <div class="login whitebox">
-            <form class="" action="index.html" method="post">
-                <label for="email">E-mail:</label> <input type="text" name="Email" value=""> <br>
-                <label for="password">Password:</label> <input type="password" name="Password" value="">
-                <div class="align-r">
-                  <button>login</button>
-                </div>
-            </form>
-          </div>
-          <div class="whitebox">
-            <h2 class="centered">
-              Sign up here
-            </h2>
-            <form class="" action="index.html" method="post">
-                Email: <input type="text" name="Email" value=""><br>
-                Password: <input type="password" name="Password" value=""> <br>
-                Repeat Password: <input type="password" name="Password" value=""> <br>
-                Email: <input type="text" name="Email" value=""> <br>
-                Email: <input type="text" name="Email" value=""> <br>
-                Email: <input type="text" name="Email" value=""> <br>
-                Email: <input type="text" name="Email" value=""> <br>
-                Email: <input type="text" name="Email" value="">
-            </form>
-          </div>
+
+      <div class="credentials">
+        <div class="login whitebox">
+          <form class="" action="index.html" method="post">
+              
+              <label for="email" class="inputText formElemMargin">E-mail:</label> 
+              <input  class="formElemMargin"type="text" name="Email" value=""> <br>
+              
+              <label for="password" class="inputText formElemMargin">Password:</label> 
+              <input class="formElemMargin" type="password" name="Password" value="">
+              
+              <div class="align-r">
+                <button class="inputText formElemMargin">login</button>
+              </div>
+          </form>
         </div>
+        <div class="whitebox">
+          <h3 class="centered">
+            Sign up here
+          </h3>
+          <form class="" action="index.html" method="post">
+              <label class="inputText formElemMargin"> First name: </label> 
+              <input class="formElemMargin" type="text" name="FirstName" value=""> <br>
+              
+              <label class="inputText formElemMargin"> Family name: </label> 
+              <input class="formElemMargin" type="text" name="FamilyName" value=""> <br>
+              
+              <select class="formElemMargin" id="gender" name="gender">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+              
+              <label class="inputText formElemMargin">City:</label> 
+              <input class="formElemMargin" type="text" name="City" value=""> <br>
+              
+              <label class="inputText formElemMargin">Country:</label> 
+              <input class="formElemMargin" type="text" name="Country" value="">
+              
+              <label class="inputText formElemMargin">Email:</label> 
+              <input class="formElemMargin" type="text" name="Email" value=""><br>
+              
+              <label class="inputText formElemMargin">Password:</label> 
+              <input  class="formElemMargin"type="password" name="Password" value=""> <br>
+
+              <label class="inputText formElemMargin">Repeat PSW:</label> 
+              <input class="formElemMargin" type="password" name="RepPassword" value=""> <br>
+
+              <div class="align-r">
+                <button class="inputText formElemMargin">signup</button>
+              </div>
+          </form>
+        </div>
+      </div>
     </div>
   </body>
 </html>
