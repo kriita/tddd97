@@ -16,7 +16,7 @@
 				<!-- Login box -->
 
 				<div class="login">
-					<form onsubmit="">
+					<form onsubmit="signinValidation(this);">
 
 						<label for="email" class="inputText formElemMargin">E-mail:</label>
 						<input  class="formElemMargin"type="text" name="Email" value=""> <br>
@@ -36,12 +36,12 @@
 					<h3 class="centered">
 						Sign up here
 					</h3>
-					<form onsubmit="saveContact(); return false;">
+					<form onsubmit="signupValidation(this);">
 						<label class="inputText formElemMargin"> First name: </label>
-						<input class="formElemMargin" type="text" name="FirstName" value=""> <br>
+						<input class="formElemMargin" required type="text" name="firstName" value=""> <br>
 
 						<label class="inputText formElemMargin"> Family name: </label>
-						<input class="formElemMargin" type="text" name="FamilyName" value=""> <br>
+						<input class="formElemMargin" required type="text" name="familyName" value=""> <br>
 
 						<label class="inputText formElemMargin">Gender: </label>
 						<select class="formElemMargin" id="gender" name="gender">
@@ -51,19 +51,19 @@
 						</select>
 
 						<label class="inputText formElemMargin">City:</label>
-						<input class="formElemMargin" type="text" name="City" value=""> <br>
+						<input class="formElemMargin" required type="text" name="city" value=""> <br>
 
 						<label class="inputText formElemMargin">Country:</label>
-						<input class="formElemMargin" type="text" name="Country" value="">
+						<input class="formElemMargin" required type="text" name="country" value="">
 
 						<label class="inputText formElemMargin">Email:</label>
-						<input class="formElemMargin" type="text" name="Email" value=""><br>
+						<input class="formElemMargin" required type="text" name="email" value=""><br>
 
 						<label class="inputText formElemMargin">Password:</label>
-						<input  class="formElemMargin"type="password" name="Password" value=""> <br>
+						<input  class="formElemMargin" required type="password" name="password" value=""> <br>
 
 						<label class="inputText formElemMargin">Repeat PSW:</label>
-						<input class="formElemMargin" type="password" name="RepPassword" value=""> <br>
+						<input class="formElemMargin" required type="password" name="repPassword" value=""> <br>
 
 						<div class="align-r">
 							<button class="inputText formElemMargin">signup</button>

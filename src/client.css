@@ -35,26 +35,16 @@ body {
   //overflow: auto;
   flex-direction: column;
 }
-<<<<<<< HEAD
-=======
 
->>>>>>> refs/remotes/origin/master
 .login{
   width: 100%;
   padding-top: 10px;
   margin-bottom: 10px;
-<<<<<<< HEAD
-  background-color: white;
-}
-
-.signup{
-=======
   overflow: auto;
   background-color: white;
 }
 
-.signup{  
->>>>>>> refs/remotes/origin/master
+.signup{
   width: 100%;
   overflow: auto;
   background-color: white;
@@ -65,18 +55,12 @@ input{
   float: right;
   clear: right;
   width: 50%;
-<<<<<<< HEAD
-  height: 7%;
-=======
->>>>>>> refs/remotes/origin/master
 }
 
 select{
   float: right;
   clear: right;
   width: 50%;
-<<<<<<< HEAD
-=======
 }
 
 .login input{
@@ -92,16 +76,11 @@ select{
 }
 
 .signup select{
->>>>>>> refs/remotes/origin/master
   height: 8%;
 }
 
 .inputText{
-<<<<<<< HEAD
   float: left;
-=======
-  float: left;  
->>>>>>> refs/remotes/origin/master
   clear: left;
   font-size: 14px;
   height: 8%;
@@ -122,8 +101,4 @@ select{
 
 .centered{
   text-align: center;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> refs/remotes/origin/master
