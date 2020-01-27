@@ -55,13 +55,27 @@ input{
   float: right;
   clear: right;
   width: 50%;
-  height: 8%;
 }
 
 select{
   float: right;
   clear: right;
   width: 50%;
+}
+
+.login input{
+  height: 25%;
+}
+
+.login select{
+  height: 25%;
+}
+
+.signup input{
+  height: 8%;
+}
+
+.signup select{
   height: 8%;
 }
 
