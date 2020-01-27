@@ -41,11 +41,9 @@ signup=function(form){
   var password = form.password.value.trim();
   var repPassword = form.repPassword.value.trim();
 
-
-
-document.getElementById("password").onchange = validateSignup;
-document.getElementById("repPassword").onkeyup = validateSignup;
-
+  var request = {"email" : email, "password" : password, "firstname" : firstName
+                , "familyname" : familyName, "gender" : gender, "city" : city, "country" : country};
+  var mess = serverstub.signUp(request);
   //var info = [];
   //info = JSON.stringify(form);
   //var obj = JSON.parse(info);
