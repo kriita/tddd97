@@ -6,7 +6,7 @@ body {
 }
 
 .welcome{
-    //margin: auto;
+    margin: auto;
     margin-top: 100px;
     width: 600px;
     height: 400px;
@@ -54,7 +54,12 @@ input{
   float: right;
   clear: right;
   width: 50%;
+}
 
+select{
+  float: right;
+  clear: right;
+  width: 50%;
 }
 
 .inputText{
@@ -62,13 +67,6 @@ input{
   clear: left;
   font-size: 14px;
   border:solid;
-}
-
-select{
-  float: left;
-  clear: left;
-  clear: right;
-  max-width: 50%;
 }
 
 .formElemmargin{
