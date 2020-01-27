@@ -19,9 +19,6 @@ body {
   width: 340px;
   //margin-right: 10px;
   //overflow: auto;
-
-  border:solid;
-  border-width: 2px;
 }
 
 #ImageLogo{
@@ -32,22 +29,26 @@ body {
 
 .credentials{
   float: right;
-  //display: inline-block;
+  display: flex;
   width: 250px;
   height: 400px;
   //overflow: auto;
-
+  flex-direction: column;
 }
 
 .login{
+  width: 100%;
   padding-top: 10px;
   margin-bottom: 10px;
-
-}
-.whitebox{
   overflow: auto;
   background-color: white;
-  border: solid;
+}
+
+.signup{  
+  width: 100%;
+  overflow: auto;
+  background-color: white;
+  flex-grow: 1;
 }
 
 input{
@@ -66,7 +67,6 @@ select{
   float: left;  
   clear: left;
   font-size: 14px;
-  border:solid;
 }
 
 .formElemmargin{
@@ -84,5 +84,4 @@ select{
 
 .centered{
   text-align: center;
-  border:solid;
 }
