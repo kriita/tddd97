@@ -55,18 +55,21 @@ input{
   float: right;
   clear: right;
   width: 50%;
+  height: 8%;
 }
 
 select{
   float: right;
   clear: right;
   width: 50%;
+  height: 8%;
 }
 
 .inputText{
   float: left;  
   clear: left;
   font-size: 14px;
+  height: 8%;
 }
 
 .formElemmargin{
