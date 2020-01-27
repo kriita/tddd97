@@ -16,13 +16,13 @@
 				<!-- Login box -->
 
 				<div class="login">
-					<form onsubmit="signinValidation(this);">
+					<form onsubmit="signin(this);">
 
 						<label for="email" class="inputText formElemMargin">E-mail:</label>
-						<input  class="formElemMargin"type="text" name="Email" value=""> <br>
+						<input  class="formElemMargin" required type="email" name="Email" value=""> <br>
 
 						<label for="password" class="inputText formElemMargin">Password:</label>
-						<input class="formElemMargin" type="password" name="Password" value="">
+						<input class="formElemMargin" required type="password" name="Password" value="">
 
 						<div class="align-r">
 							<button class="inputText formElemMargin">login</button>
@@ -36,7 +36,7 @@
 					<h3 class="centered">
 						Sign up here
 					</h3>
-					<form onsubmit="signupValidation(this);">
+					<form onsubmit="signup(this);">
 						<label class="inputText formElemMargin"> First name: </label>
 						<input class="formElemMargin" required type="text" name="firstName" value=""> <br>
 
@@ -57,17 +57,19 @@
 						<input class="formElemMargin" required type="text" name="country" value="">
 
 						<label class="inputText formElemMargin">Email:</label>
-						<input class="formElemMargin" required type="text" name="email" value=""><br>
+						<input class="formElemMargin" required type="email" name="email" value=""><br>
 
 						<label class="inputText formElemMargin">Password:</label>
-						<input  class="formElemMargin" required type="password" name="password" value=""> <br>
+						<input  class="formElemMargin" oninput = "validatePassword();" required type="password" id = "password" name="password" value=""> <br>
 
 						<label class="inputText formElemMargin">Repeat PSW:</label>
-						<input class="formElemMargin" required type="password" name="repPassword" value=""> <br>
+						<input class="formElemMargin" oninput = "validatePassword();" required type="password" id = "confirm_password" name="repPassword" value=""> <br>
 
+						<label id="errorLabel"></label>
 						<div class="align-r">
 							<button class="inputText formElemMargin">signup</button>
 						</div>
+
 					</form>
 				</div>
 			</div>

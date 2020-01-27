@@ -94,11 +94,17 @@ select{
 
 .align-r{
   float: right;
-  clear: left;
   clear: right;
 }
 
 
+
 .centered{
   text-align: center;
+}
+
+#errorLabel{
+  float: left;
+  clear: left;
+  color: red;
 }
