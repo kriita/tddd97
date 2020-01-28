@@ -113,6 +113,11 @@ select{
   color: red;
 }
 
+#signupMessage{
+  float: left;
+  clear: left;
+}
+
 /* Profile page */
 
 .menu{
@@ -157,4 +162,3 @@ select{
     height: 400px;
     //overflow:auto;
 }
-
