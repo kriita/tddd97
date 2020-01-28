@@ -1,9 +1,10 @@
 body {
-  display: block;
   width: auto;
   height: auto;
   background-color: cyan;
 }
+
+/* Welecome page */
 
 .welcome{
     margin: auto;
@@ -26,7 +27,6 @@ body {
   max-height:100%;
 }
 
-
 .credentials{
   float: right;
   display: flex;
@@ -36,6 +36,8 @@ body {
   flex-direction: column;
 }
 
+// Login box
+
 .login{
   width: 100%;
   padding-top: 10px;
@@ -44,12 +46,20 @@ body {
   background-color: white;
 }
 
+// Signin box
+
 .signup{
   width: 100%;
   overflow: auto;
   background-color: white;
   flex-grow: 1;
 }
+
+.centered{
+  text-align: center;
+}
+
+// Form formatting
 
 input{
   float: right;
@@ -97,14 +107,54 @@ select{
   clear: right;
 }
 
-
-
-.centered{
-  text-align: center;
-}
-
 #errorLabel{
   float: left;
   clear: left;
   color: red;
 }
+
+/* Profile page */
+
+.menu{
+  width: 100%;
+  margin-bottom: 10px;
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tab{
+  margin: 4px;
+}
+
+#hometab{
+  width: 100%;
+  overflow: auto;
+  background-color: white;
+  flex-grow: 1;
+}
+
+#browsetab{
+  display: none;
+  width: 100%;
+  overflow: auto;
+  background-color: white;
+  flex-grow: 1;
+}
+
+#accounttab{
+  display: none;
+  width: 100%;
+  overflow: auto;
+  background-color: white;
+  flex-grow: 1;
+}
+
+.profile{
+    margin: auto;
+    margin-top: 100px;
+    width: 600px;
+    height: 400px;
+    //overflow:auto;
+}
+
