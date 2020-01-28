@@ -51,15 +51,19 @@ signup=function(form){
 
 signin=function(form){
 
-  var firstName = form.firstName.value.trim();
-  var familyName = form.familyName.value.trim();
-  var gender = form.gender.value.trim();
-  var city = form.city.value.trim();
-  var country = form.country.value.trim();
   var email = form.email.value.trim();
   var password = form.password.value.trim();
-  var repPassword = form.repPassword.value.trim();
+  var mess = serverstub.signIn(email,password);
+  var token = mess["data"];
+  if(token != null){
+    localStorage.setItem("token", token);
+  }
+  else{
+    var errorMessage = document.getElementById('errorLabel');
+    errorMessage.innerHTML = mess["message"];
+  }
 
+  return false;
 
 };
 
