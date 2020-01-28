@@ -169,13 +169,45 @@ select{
 
 /* Home tab */
 #hometab{
-  display: none;
   width: 100%;
   height: 100%;
   background-color: white;
   
   overflow: auto;
-  flex-grow: 1;
+}
+
+.info span{
+  height: 8%;
+  margin: 2px;
+}
+
+.info a{
+  height: 8%;
+  margin: 2px;
+}
+
+#hometab form{
+  display: inline-block;
+  width: 100%;
+}
+
+#hometab input{
+  height: 8%;
+  width: 70%;
+  margin: 2px;
+}
+
+#hometab label{
+  float: left;
+  clear: left;
+  font-size: 14px;
+  height: 8%;
+  max-width: 40%;
+  margin: 2px;
+}
+
+#hometab button{
+  margin: 6px;
 }
 
 /* Browse tab */
@@ -190,7 +222,7 @@ select{
 
 /* Account tab */
 #accounttab{
-  display: block;
+  display: none;
   width: 100%;
   background-color: white;
   
