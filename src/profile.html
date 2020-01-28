@@ -7,60 +7,6 @@
 </head>
 <body>
   <div id="content">
-  	<!-- UI body -->
-		<div class="profile">
-
-			<div class="logo">
-				<img id="Imagelogo" src="../res/wimage.png" alt="NO FILE FOUND">
-			</div>
-
-			<div class="interface">
-
-				<!-- Menu -->
-
-				<div class="menu">
-					<div class="tab" id="home" onclick="selectHome();">Home</div>
-					<div class="tab" id="browse" onclick="selectBrowse();">Browse</div>
-					<div class="tab" id="account" onclick="selectAccount();">Account</div>
-				</div>
-
-				<!-- Tab view -->
-
-				<div id="hometab">
-					
-				</div>
-				<div id="browsetab">
-					
-				</div>
-				<div id="accounttab">
-
-					<div class="resetpassword">
-						<div class="subtitle">
-							Reset password:
-						</div>
-
-						<form onsubmit="serverstub.changePassword(token, password, new_password); return false;">
-							<label>Old password:</label>
-							<input required type="password" name="password"><br>
-
-							<label>New password:</label>
-							<input type="password" name="new_password">
-
-							<label>Repeat new password:</label>
-							<input type="password" name="repeat_new_password">
-
-							<button class="align-r">Reset password</button>
-						</form>
-					</div>
-
-					<div class="signout">
-						<button class="align-r" onclick="signout(); return false;">
-							Sign out
-						</button>
-					</div>					
-				</div>
-			</div>
-		</div>
   </div>
 </body>
 </html>
