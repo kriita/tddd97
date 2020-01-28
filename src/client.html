@@ -91,9 +91,9 @@
 				<!-- Menu -->
 
 				<div class="menu">
-					<div class="tab" id="home" onclick="selectHome();">Home</div>
-					<div class="tab" id="browse" onclick="selectBrowse();">Browse</div>
-					<div class="tab" id="account" onclick="selectAccount();">Account</div>
+					<div class="tab" id="home" onclick="select(this);">Home</div>
+					<div class="tab" id="browse" onclick="select(this);">Browse</div>
+					<div class="tab" id="account" onclick="select(this);">Account</div>
 				</div>
 
 				<!-- Tab view -->
@@ -106,35 +106,10 @@
 						<div class="subtitle">
 							Personal information:
 						</div>
-						<div>
-							<span>E-mail:</span>
-							<a class="align-r" href=""></a>
-						</div>
+						<div id="personalInfo">
 
-						<div>
-							<span>First name:</span>
-							<span class="align-r"></span>
 						</div>
-
-						<div>
-							<span>Family name:</span>
-							<span class="align-r"></span>
-						</div>
-
-						<div>
-							<span>Gender:</span>
-							<span class="align-r"></span>
-						</div>
-
-						<div>
-							<span>City:</span>
-							<span class="align-r"></span>
-						</div>
-
-						<div>
-							<span>Country:</span>
-							<span class="align-r"></span>
-						</div>
+						
 					</div>
 
 					<!-- New post -->

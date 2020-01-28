@@ -1,4 +1,5 @@
 var password = document.getElementById("password"), confirm_password = document.getElementById("confirm_password");
+var current_tab = "home";
 
 displayView=function(view){
   //thecoderequiredtodisplayaview
@@ -14,6 +15,8 @@ window.onload=function(){
 
   if(token){
      displayView(document.getElementById('profileView'));
+     displayAccountInfo();
+
   }
   else{
     displayView(document.getElementById('welcomeview'));
@@ -33,6 +36,11 @@ resetPassword=function(form){
   }
   var token = localStorage.getItem("token");
   var message = serverstub.changePassword(token,password,new_password);
+  if(!message["success"]){
+    var errorMessage = document.getElementById('reset_password_message');
+    errorMessage.innerHTML = message["message"];
+
+  }
 }
 
 validatePassword=function(){
@@ -49,6 +57,18 @@ validatePassword=function(){
   else {
     confirm_password.setCustomValidity("");
     password.setCustomValidity("");
+
+  }switch (tab.id) {
+    case "home":
+
+      break;
+    case "browse":
+
+      break;
+    case "account":
+
+      break;
+    default:
 
   }
 }
@@ -76,8 +96,8 @@ signup=function(form){
                 , "familyname" : familyName, "gender" : gender, "city" : city, "country" : country};
   var mess = serverstub.signUp(request);
   var errorMessage = document.getElementById('signupMessage');
-  errorMessage.innerHTML = mess["message"];
-
+  errorMessage.innerHTML = mess["message"]  ;
+document.getElementById("personalInfo")
 
   return false; //not to refresh page
   //var info = [];
@@ -105,8 +125,7 @@ signin=function(form){
 
 };
 
-signinValidation=function(form){
-};
+
 
 /*  */
 
@@ -126,4 +145,39 @@ validateNewPassword=function(){
     password.setCustomValidity("");
 
   }
+}
+
+displayAccountInfo = function() {
+  var token = localStorage.getItem("token");
+  var user = serverstub.getUserDataByToken(token);
+  //window.alert(JSON.stringify(user));
+ var personalInfo = document.getElementById("personalInfo")
+  for(info in user["data"]){
+    personalInfo.innerHTML += "<div> <span>" + info
+      + ":</span> 	<span class='align-r'>" +user["data"][info] + "</span> </div>";
+  }document.getElementById("personalInfo")
+
+
+}
+
+select=function (tab) {
+
+
+  var currentTab = document.getElementById(current_tab);
+  currentTab.style.backgroundColor = "lightgrey";
+
+
+  var currentContent = document.getElementById(current_tab + "tab");
+  currentContent.style.display = "none";
+
+
+  var content = document.getElementById(tab.id + "tab");
+  content.style.display = "block";
+  current_tab = tab.id;
+  tab.style.backgroundColor = "grey";
+
+
+
+
+
 }
