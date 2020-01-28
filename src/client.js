@@ -40,6 +40,13 @@ validatePassword=function(){
   }
 }
 
+signout = function() {
+  var token = localStorage.getItem("token");
+  serverstub.signOut(token)
+  localStorage.removeItem("token");
+  displayView(document.getElementById('welcomeview'));
+}
+
 
 signup=function(form){
 
