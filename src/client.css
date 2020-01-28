@@ -220,6 +220,30 @@ select{
   flex-grow: 1;
 }
 
+#browsetab form{
+  display: inline-block;
+  width: 100%;
+}
+
+#browsetab input{
+  height: 8%;
+  width: 70%;
+  margin: 2px;
+}
+
+#browsetab label{
+  float: left;
+  clear: left;
+  font-size: 14px;
+  height: 8%;
+  max-width: 40%;
+  margin: 2px;
+}
+
+#browsetab button{
+  margin: 6px;
+}
+
 /* Account tab */
 #accounttab{
   display: none;

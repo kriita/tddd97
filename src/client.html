@@ -160,9 +160,24 @@
 						<button class="align-r" id="refresh-posts">Refresh</button>
 					</div>
 				</div>
+				
 				<div id="browsetab">
-
+					<div>
+						<form onsubmit="browseUser(email); return False;">
+							<label>View user:</label>
+							<input type="email" name="email">
+							<button class="align-r">Search</button>
+						</form>
+					</div>
+					<div id="browsePage">
+						<div class="subtitle">Personal information:</div>
+						<div class="browseInfo"></div>
+						<div class="subtitle">Wall:</div>
+						<div class="browseWall"></div>
+						<button class="align-r" id="refresh-browse">Refresh</button>
+					</div>
 				</div>
+
 				<div id="accounttab">
 
 					<div class="resetpassword">
