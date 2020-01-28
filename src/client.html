@@ -100,6 +100,65 @@
 
 				<div id="hometab">
 
+					<!-- Personal information -->
+
+					<div class="info">
+						<div class="subtitle">
+							Personal information:
+						</div>
+						<div>
+							<span>E-mail:</span>
+							<a class="align-r" href=""></a>
+						</div>
+
+						<div>
+							<span>First name:</span>
+							<span class="align-r"></span>
+						</div>
+
+						<div>
+							<span>Family name:</span>
+							<span class="align-r"></span>
+						</div>
+
+						<div>
+							<span>Gender:</span>
+							<span class="align-r"></span>
+						</div>
+
+						<div>
+							<span>City:</span>
+							<span class="align-r"></span>
+						</div>
+
+						<div>
+							<span>Country:</span>
+							<span class="align-r"></span>
+						</div>
+					</div>
+
+					<!-- New post -->
+
+					<div>
+						<div class="subtitle">
+							New post:
+						</div>
+						<form onclick="serverstub.postMessage(token, contents, email); return false;">
+							<label>Recipient:</label>
+							<input required class="align-r" type="email" name="email" id="recipient">
+							<label>Content:</label>
+							<input required class="align-r" type="text" name="contents">
+							<button class="align-r">Submit</button>
+						</form>
+					</div>
+
+					<!-- Wall -->
+
+					<div>
+						<div class="subtitle">Wall:</div>
+						<div id="posts"></div>
+						<button class="align-r" id="refresh-posts">Refresh</button>
+					</div>
 				</div>
 				<div id="browsetab">
 
