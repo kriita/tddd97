@@ -27,6 +27,8 @@ resetPassword=function(form){
   var repeat_new_password = form.repeat_new_password.value.trim();
   var password = form.password.value.trim();
   if( new_password == password){
+    var errorMessage = document.getElementById('reset_password_message');
+    errorMessage.innerHTML = "cannot use same password";
     return false;
   }
   var token = localStorage.getItem("token");
