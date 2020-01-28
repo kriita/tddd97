@@ -83,9 +83,25 @@ signin=function(form){
 
 };
 
-
-
-
-
 signinValidation=function(form){
 };
+
+/*  */
+
+validateNewPassword=function(){
+  var password = document.getElementById("new_password");
+  var confirm_password = document.getElementById("confirm_new_password");
+  if (password.value.trim().length <= 9) {
+    password.setCustomValidity("New password not long enough");
+  }
+  else if(password.value.trim() != confirm_password.value.trim()){
+    password.setCustomValidity("");
+
+    confirm_password.setCustomValidity("Passwords don't match");
+  }
+  else {
+    confirm_password.setCustomValidity("");
+    password.setCustomValidity("");
+
+  }
+}

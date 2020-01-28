@@ -33,7 +33,31 @@
 					
 				</div>
 				<div id="accounttab">
-					
+
+					<div class="resetpassword">
+						<div class="subtitle">
+							Reset password:
+						</div>
+
+						<form onsubmit="serverstub.changePassword(token, password, new_password); return false;">
+							<label>Old password:</label>
+							<input required type="password" name="password"><br>
+
+							<label>New password:</label>
+							<input type="password" name="new_password">
+
+							<label>Repeat new password:</label>
+							<input type="password" name="repeat_new_password">
+
+							<button class="align-r">Reset password</button>
+						</form>
+					</div>
+
+					<div class="signout">
+						<button class="align-r" onclick="signout(); return false;">
+							Sign out
+						</button>
+					</div>					
 				</div>
 			</div>
 		</div>
