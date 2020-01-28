@@ -26,14 +26,11 @@ resetPassword=function(form){
   var new_password = form.new_password.value.trim();
   var repeat_new_password = form.repeat_new_password.value.trim();
   var password = form.password.value.trim();
-  if(    new_password.length < 10
-      || new_password != repeat_new_password
-      || new_password == password){
+  if( new_password == password){
     return false;
   }
   var token = localStorage.getItem("token");
   var message = serverstub.changePassword(token,password,new_password);
-  window.alert(JSON.stringify(message));
 }
 
 validatePassword=function(){
@@ -113,7 +110,7 @@ signinValidation=function(form){
 
 validateNewPassword=function(){
   var password = document.getElementById("new_password");
-  var confirm_password = document.getElementById("confirm_new_password");
+  var confirm_password = document.getElementById("repeat_new_password");
   if (password.value.trim().length <= 9) {
     password.setCustomValidity("New password not long enough");
   }
