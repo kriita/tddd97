@@ -7,6 +7,15 @@ displayView=function(view){
 };
 
 window.onload=function(){
+  var token = localStorage.getItem("token");
+  var loggedinusers = JSON.parse(localStorage.getItem("loggedinusers"));
+
+  for(user in loggedinusers){
+    if(token == user){
+      displayView(document.getElementById('profileView'));
+      return false;
+    }
+  }
   displayView(document.getElementById('welcomeview'));
 };
 
@@ -44,6 +53,11 @@ signup=function(form){
   var request = {"email" : email, "password" : password, "firstname" : firstName
                 , "familyname" : familyName, "gender" : gender, "city" : city, "country" : country};
   var mess = serverstub.signUp(request);
+  var errorMessage = document.getElementById('signupMessage');
+  errorMessage.innerHTML = mess["message"];
+
+
+  return false; //not to refresh page
   //var info = [];
   //info = JSON.stringify(form);
   //var obj = JSON.parse(info);
@@ -57,6 +71,8 @@ signin=function(form){
   var token = mess["data"];
   if(token != null){
     localStorage.setItem("token", token);
+    displayView(document.getElementById('profileView'));
+
   }
   else{
     var errorMessage = document.getElementById('errorLabel');
@@ -66,6 +82,7 @@ signin=function(form){
   return false;
 
 };
+
 
 
 

@@ -113,6 +113,11 @@ select{
   color: red;
 }
 
+#signupMessage{
+  float: left;
+  clear: left;
+}
+
 /* Profile page */
 
 
