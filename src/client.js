@@ -15,6 +15,8 @@ window.onload=function(){
 
   if(token){
      displayView(document.getElementById('profileView'));
+     displayAccountInfo();
+
   }
   else{
     displayView(document.getElementById('welcomeview'));
@@ -95,7 +97,7 @@ signup=function(form){
   var mess = serverstub.signUp(request);
   var errorMessage = document.getElementById('signupMessage');
   errorMessage.innerHTML = mess["message"]  ;
-
+document.getElementById("personalInfo")
 
   return false; //not to refresh page
   //var info = [];
@@ -148,6 +150,14 @@ validateNewPassword=function(){
 displayAccountInfo = function() {
   var token = localStorage.getItem("token");
   var user = serverstub.getUserDataByToken(token);
+  //window.alert(JSON.stringify(user));
+ var personalInfo = document.getElementById("personalInfo")
+  for(info in user["data"]){
+    personalInfo.innerHTML += "<div> <span>" + info
+      + ":</span> 	<span class='align-r'>" +user["data"][info] + "</span> </div>";
+  }document.getElementById("personalInfo")
+
+
 }
 
 select=function (tab) {
