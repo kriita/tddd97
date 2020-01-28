@@ -9,10 +9,10 @@ displayView=function(view){
 window.onload=function(){
   var token = localStorage.getItem("token");
   var user = serverstub.getUserDataByToken(token);
-  var mess = serverstub.signIn(user["email"],user["password"]);
+  //window.alert(JSON.stringify(user));
+  //var mess = serverstub.signIn(user["email"],user["password"]);
 
-  //window.alert(JSON.stringify(mess));
-  if(mess["success"]){
+  if(token){
      displayView(document.getElementById('profileView'));
   }
   else{
@@ -21,6 +21,20 @@ window.onload=function(){
 
 };
 
+
+resetPassword=function(form){
+  var new_password = form.new_password.value.trim();
+  var repeat_new_password = form.repeat_new_password.value.trim();
+  var password = form.password.value.trim();
+  if(    new_password.length < 10
+      || new_password != repeat_new_password
+      || new_password == password){
+    return false;
+  }
+  var token = localStorage.getItem("token");
+  var message = serverstub.changePassword(token,password,new_password);
+  window.alert(JSON.stringify(message));
+}
 
 validatePassword=function(){
   var password = document.getElementById("password");
