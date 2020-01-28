@@ -16,7 +16,7 @@ window.onload=function(){
   if(token){
      displayView(document.getElementById('profileView'));
      displayAccountInfo();
-
+     
   }
   else{
     displayView(document.getElementById('welcomeview'));
@@ -58,18 +58,6 @@ validatePassword=function(){
     confirm_password.setCustomValidity("");
     password.setCustomValidity("");
 
-  }switch (tab.id) {
-    case "home":
-
-      break;
-    case "browse":
-
-      break;
-    case "account":
-
-      break;
-    default:
-
   }
 }
 
@@ -78,6 +66,7 @@ signout = function() {
   serverstub.signOut(token)
   localStorage.removeItem("token");
   displayView(document.getElementById('welcomeview'));
+  current_tab = "home";
 }
 
 
@@ -114,6 +103,7 @@ signin=function(form){
   if(token != null){
     localStorage.setItem("token", token);
     displayView(document.getElementById('profileView'));
+    displayAccountInfo();
 
   }
   else{
@@ -138,7 +128,7 @@ validateNewPassword=function(){
   else if(password.value.trim() != confirm_password.value.trim()){
     password.setCustomValidity("");
 
-    confirm_password.setCustomValidity("Passwords don't match");
+    confirm_password.setCustomValidity("currentTabPasswords don't match");
   }
   else {
     confirm_password.setCustomValidity("");
