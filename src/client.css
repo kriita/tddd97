@@ -115,38 +115,66 @@ select{
 
 /* Profile page */
 
+
+/* Menu */
 .menu{
-  width: 100%;
+  max-width: 100%;
+  padding: 10px;
   margin-bottom: 10px;
   background-color: white;
+
   display: flex;
   justify-content: space-between;
 }
 
 .tab{
-  margin: 4px;
+  padding: 4px;
+  background-color: lightgrey;
+}
+
+#home {
+  background-color: grey;
+}
+
+.menu div.tab:hover{
+  background-color: grey;
+}
+
+
+/* Tab */
+.interface{
+  float: right;
+  display: flex;
+  width: 250px;
+  height: 400px;
+  //overflow: auto;
+  flex-direction: column;
 }
 
 #hometab{
   width: 100%;
-  overflow: auto;
+  height: 100%;
   background-color: white;
+  
+  overflow: auto;
   flex-grow: 1;
 }
 
 #browsetab{
   display: none;
   width: 100%;
-  overflow: auto;
   background-color: white;
+  
+  overflow: auto;
   flex-grow: 1;
 }
 
 #accounttab{
   display: none;
   width: 100%;
-  overflow: auto;
   background-color: white;
+  
+  overflow: auto;
   flex-grow: 1;
 }
 
@@ -155,6 +183,4 @@ select{
     margin-top: 100px;
     width: 600px;
     height: 400px;
-    //overflow:auto;
 }
-
