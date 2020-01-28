@@ -8,15 +8,17 @@ displayView=function(view){
 
 window.onload=function(){
   var token = localStorage.getItem("token");
-  var loggedinusers = JSON.parse(localStorage.getItem("loggedinusers"));
+  var user = serverstub.getUserDataByToken(token);
+  var mess = serverstub.signIn(user["email"],user["password"]);
 
-  for(user in loggedinusers){
-    if(token == user){
-      displayView(document.getElementById('profileView'));
-      return false;
-    }
+  //window.alert(JSON.stringify(mess));
+  if(mess["success"]){
+     displayView(document.getElementById('profileView'));
   }
-  displayView(document.getElementById('welcomeview'));
+  else{
+    displayView(document.getElementById('welcomeview'));
+  }
+
 };
 
 
