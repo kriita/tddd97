@@ -99,10 +99,10 @@
 				<!-- Tab view -->
 
 				<div id="hometab">
-					
+
 				</div>
 				<div id="browsetab">
-					
+
 				</div>
 				<div id="accounttab">
 
@@ -111,25 +111,27 @@
 							Reset password:
 						</div>
 
-						<form onsubmit="serverstub.changePassword(token, password, new_password); return false;">
+						<form onsubmit="resetPassword(this); return false;">
 							<label>Old password:</label>
 							<input required type="password" name="password"><br>
 
 							<label>New password:</label>
-							<input type="password" name="new_password" oninput="validateNewPassword()">
+							<input type="password" name="new_password" id="new_password" oninput="validateNewPassword()">
 
 							<label>Repeat new password:</label>
-							<input type="password" name="repeat_new_password" oninput="validateNewPassword()">
+							<input type="password" name="repeat_new_password" id="repeat_new_password" oninput="validateNewPassword()">
+
 
 							<button class="align-r">Reset password</button>
 						</form>
+						<label id="reset_password_message"></label>
 					</div>
 
 					<div class="signout">
 						<button class="align-r" onclick="signout(); return false;">
 							Sign out
 						</button>
-					</div>					
+					</div>
 				</div>
 			</div>
 		</div>

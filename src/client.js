@@ -9,10 +9,10 @@ displayView=function(view){
 window.onload=function(){
   var token = localStorage.getItem("token");
   var user = serverstub.getUserDataByToken(token);
-  var mess = serverstub.signIn(user["email"],user["password"]);
+  //window.alert(JSON.stringify(user));
+  //var mess = serverstub.signIn(user["email"],user["password"]);
 
-  //window.alert(JSON.stringify(mess));
-  if(mess["success"]){
+  if(token){
      displayView(document.getElementById('profileView'));
   }
   else{
@@ -21,6 +21,19 @@ window.onload=function(){
 
 };
 
+
+resetPassword=function(form){
+  var new_password = form.new_password.value.trim();
+  var repeat_new_password = form.repeat_new_password.value.trim();
+  var password = form.password.value.trim();
+  if( new_password == password){
+    var errorMessage = document.getElementById('reset_password_message');
+    errorMessage.innerHTML = "cannot use same password";
+    return false;
+  }
+  var token = localStorage.getItem("token");
+  var message = serverstub.changePassword(token,password,new_password);
+}
 
 validatePassword=function(){
   var password = document.getElementById("password");
@@ -99,7 +112,7 @@ signinValidation=function(form){
 
 validateNewPassword=function(){
   var password = document.getElementById("new_password");
-  var confirm_password = document.getElementById("confirm_new_password");
+  var confirm_password = document.getElementById("repeat_new_password");
   if (password.value.trim().length <= 9) {
     password.setCustomValidity("New password not long enough");
   }
