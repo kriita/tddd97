@@ -5,6 +5,10 @@ body {
   background-color: cyan;
 }
 
+form{
+  margin-bottom: 0;
+}
+
 /* Welecome page */
 
 .welcome{
@@ -176,13 +180,8 @@ select{
   overflow: auto;
 }
 
-.info span{
-  height: 8%;
-  margin: 2px;
-}
-
-.info a{
-  height: 8%;
+#personalInfo div{
+  height: 5%;
   margin: 2px;
 }
 
@@ -242,6 +241,11 @@ select{
 
 #browsetab button{
   margin: 6px;
+}
+
+#personalInfoForUser div{
+  height: 5%;
+  margin: 2px;
 }
 
 /* Account tab */
