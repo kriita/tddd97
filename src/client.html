@@ -109,7 +109,7 @@
 						<div id="personalInfo">
 
 						</div>
-						
+
 					</div>
 
 					<!-- New post -->
@@ -118,9 +118,7 @@
 						<div class="subtitle">
 							New post:
 						</div>
-						<form onclick="serverstub.postMessage(token, contents, email); return false;">
-							<label>Recipient:</label>
-							<input required class="align-r" type="email" name="email" id="recipient">
+						<form onsubmit="return postMessage(this);">
 							<label>Content:</label>
 							<input required class="align-r" type="text" name="contents">
 							<button class="align-r">Submit</button>
@@ -132,13 +130,14 @@
 					<div>
 						<div class="subtitle">Wall:</div>
 						<div id="posts"></div>
-						<button class="align-r" id="refresh-posts">Refresh</button>
+						<div id="myWall"></div>
+						<button class="align-r" id="refresh-posts" onclick="return refreshMessages(true);">Refresh</button>
 					</div>
 				</div>
-				
+
 				<div id="browsetab">
 					<div>
-						<form onsubmit="browseUser(email); return False;">
+						<form onsubmit="return browseUser(this);">
 							<label>View user:</label>
 							<input type="email" name="email">
 							<button class="align-r">Search</button>
@@ -146,10 +145,15 @@
 					</div>
 					<div id="browsePage">
 						<div class="subtitle">Personal information:</div>
-						<div class="browseInfo"></div>
+						<div class="browseInfo" id="personalInfoForUser"></div>
+						<form onsubmit="return postMessage(this, false);">
+							<label>Content:</label>
+							<input required class="align-r" type="text" name="contents">
+							<button class="align-r">Submit</button>
+						</form>
 						<div class="subtitle">Wall:</div>
-						<div class="browseWall"></div>
-						<button class="align-r" id="refresh-browse">Refresh</button>
+						<div class="browseWall" id="browseWall"></div>
+						<button class="align-r" id="refresh-browse" onclick="return refreshMessages(false);">Refresh</button>
 					</div>
 				</div>
 

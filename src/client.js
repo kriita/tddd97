@@ -1,5 +1,6 @@
 var password = document.getElementById("password"), confirm_password = document.getElementById("confirm_password");
 var current_tab = "home";
+var currentBrowsingEmail = "";
 
 displayView=function(view){
   //thecoderequiredtodisplayaview
@@ -16,7 +17,8 @@ window.onload=function(){
   if(token){
      displayView(document.getElementById('profileView'));
      displayAccountInfo();
-     
+     displayAccountMessages();
+
   }
   else{
     displayView(document.getElementById('welcomeview'));
@@ -31,7 +33,7 @@ resetPassword=function(form){
   var password = form.password.value.trim();
   if( new_password == password){
     var errorMessage = document.getElementById('reset_password_message');
-    errorMessage.innerHTML = "cannot use same password";
+    errorMessage.innerHTML = "cannot use sacurrentBrowsingme password";
     return false;
   }
   var token = localStorage.getItem("token");
@@ -47,7 +49,7 @@ validatePassword=function(){
   var password = document.getElementById("password");
   var confirm_password = document.getElementById("confirm_password");
   if (password.value.trim().length <= 9) {
-    password.setCustomValidity("Password not long enough");
+    password.setCustomValidity("Password nocurrentBrowsingt long enough");
   }
   else if(password.value.trim() != confirm_password.value.trim()){
     password.setCustomValidity("");
@@ -80,7 +82,6 @@ signup=function(form){
   var email = form.email.value.trim();
   var password = form.password.value.trim();
   var repPassword = form.repPassword.value.trim();
-
   var request = {"email" : email, "password" : password, "firstname" : firstName
                 , "familyname" : familyName, "gender" : gender, "city" : city, "country" : country};
   var mess = serverstub.signUp(request);
@@ -104,6 +105,7 @@ signin=function(form){
     localStorage.setItem("token", token);
     displayView(document.getElementById('profileView'));
     displayAccountInfo();
+    displayAccountMessages();
 
   }
   else{
@@ -115,6 +117,12 @@ signin=function(form){
 
 };
 
+browseUser = function(form){
+  displayAccountInfo(form.email.value);
+  displayAccountMessages(form.email.value);
+  return false;
+}
+
 
 
 /*  */
@@ -125,7 +133,7 @@ validateNewPassword=function(){
   if (password.value.trim().length <= 9) {
     password.setCustomValidity("New password not long enough");
   }
-  else if(password.value.trim() != confirm_password.value.trim()){
+  else if(password.value.trim() != confirm_currentBrowsingpassword.value.trim()){
     password.setCustomValidity("");
 
     confirm_password.setCustomValidity("currentTabPasswords don't match");
@@ -137,37 +145,91 @@ validateNewPassword=function(){
   }
 }
 
-displayAccountInfo = function() {
+postMessage = function(form, mywall = true){
   var token = localStorage.getItem("token");
-  var user = serverstub.getUserDataByToken(token);
+  var recipient;
+  if(mywall){
+    var user = serverstub.getUserDataByToken(token);
+    recipient = user["data"]["email"];
+  }
+  else {
+    recipient = currentBrowsingEmail;
+  }
+  var message = form.contents.value;
+  serverstub.postMessage(token, message, recipient);
+  form.contents.value = "";
+  return false;
+}
+
+refreshMessages = function(myWall){
+  if(myWall){
+    displayAccountMessages();
+  }
+  else{
+    displayAccountMessages(currentBrowsingEmail);
+  }
+  return false;
+}
+
+displayAccountMessages = function(email = null){
+  var token = localStorage.getItem("token");
+  var posts;
+  var wall;
+
+  if(!email){
+    posts = serverstub.getUserMessagesByToken(token);
+    wall = document.getElementById("myWall");
+  }
+  else {
+    posts = serverstub.getUserMessagesByEmail(token,email);
+    wall = document.getElementById("browseWall");
+
+  }
+  wall.innerHTML = "";
+  for(message in posts["data"]){
+    wall.innerHTML += "<div> <span>" + posts["data"][message]["writer"]
+      + ":</span> 	<span class='align-r'>" +posts["data"][message]["content"] + "</span> </div>";
+  //window.alert(JSON.stringify();
+  }
+
+}
+
+displayAccountInfo = function(email = null) {
+  var token = localStorage.getItem("token");
+  var user;
+  var personalInfo;
+
+  if(!email){
+    user = serverstub.getUserDataByToken(token);
+    personalInfo = document.getElementById("personalInfo");
+  }
+  else {
+    user = serverstub.getUserDataByEmail(token,email);
+    personalInfo = document.getElementById("personalInfoForUser");
+    currentBrowsingEmail = email;
+
+  }
   //window.alert(JSON.stringify(user));
- var personalInfo = document.getElementById("personalInfo")
   for(info in user["data"]){
     personalInfo.innerHTML += "<div> <span>" + info
       + ":</span> 	<span class='align-r'>" +user["data"][info] + "</span> </div>";
-  }document.getElementById("personalInfo")
+  }
 
 
 }
 
+
+
 select=function (tab) {
-
-
   var currentTab = document.getElementById(current_tab);
   currentTab.style.backgroundColor = "lightgrey";
 
-
   var currentContent = document.getElementById(current_tab + "tab");
   currentContent.style.display = "none";
-
 
   var content = document.getElementById(tab.id + "tab");
   content.style.display = "block";
   current_tab = tab.id;
   tab.style.backgroundColor = "grey";
-
-
-
-
 
 }
