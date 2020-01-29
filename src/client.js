@@ -1,5 +1,7 @@
 var password = document.getElementById("password"), confirm_password = document.getElementById("confirm_password");
 var current_tab = "home";
+
+//saves the email of the one whos is browsed for access
 var currentBrowsingEmail = "";
 
 displayView=function(view){
@@ -8,14 +10,13 @@ displayView=function(view){
 
 };
 
+/*On page load*/
 window.onload=function(){
+  //check if token exists
   var token = localStorage.getItem("token");
-  var user = serverstub.getUserDataByToken(token);
-  //window.alert(JSON.stringify(user));
-  //var mess = serverstub.signIn(user["email"],user["password"]);
 
-  if(token){
-     displayView(document.getElementById('profileView'));
+  if(token){ // if user is logged in
+     displayView(document.getElementById('profileView')); // load profile
      displayAccountInfo();
      displayAccountMessages();
 
@@ -26,30 +27,58 @@ window.onload=function(){
 
 };
 
-
-resetPassword=function(form){
-  var new_password = form.new_password.value.trim();
-  var repeat_new_password = form.repeat_new_password.value.trim();
-  var password = form.password.value.trim();
-  if( new_password == password){
-    var errorMessage = document.getElementById('reset_password_message');
-    errorMessage.innerHTML = "cannot use sacurrentBrowsingme password";
-    return false;
-  }
-  var token = localStorage.getItem("token");
-  var message = serverstub.changePassword(token,password,new_password);
-  if(!message["success"]){
-    var errorMessage = document.getElementById('reset_password_message');
-    errorMessage.innerHTML = message["message"];
-
-  }
-}
-
+/*Called when input is given on signup */
 validatePassword=function(){
   var password = document.getElementById("password");
   var confirm_password = document.getElementById("confirm_password");
   if (password.value.trim().length <= 9) {
     password.setCustomValidity("Password nocurrentBrowsingt long enough");
+  }
+  else if(password.value.trim() != confirm_password.value.trim()){
+    password.setCustomValidity("");
+
+    confirm_password.setCustomValidity("Passwords don't match");
+  }
+  else {
+    confirm_password.setCustomValidity("");
+    password.setCustomValidity("");
+
+  }
+}
+
+
+resetPassword=function(form){
+  var new_password = form.new_password.value.trim();
+  var password = form.password.value.trim();
+  if( new_password == password){
+    var errorMessage = document.getElementById('reset_password_message');
+    errorMessage.innerHTML = "cannot use same password";
+    return false;
+  }
+  var token = localStorage.getItem("token");
+  var message = serverstub.changePassword(token,password,new_password);
+  var errorMessage = document.getElementById('reset_password_message');
+
+  if(!message["success"]){
+    errorMessage.style.color = "red";
+  }
+  else {
+    errorMessage.style.color = "green";
+    form.password.value = "";
+    form.new_password.value = "";
+    form.repeat_new_password.value = "";
+  }
+
+  errorMessage.innerHTML = message["message"];
+}
+
+
+/* Creates validity on password input when password is reset */
+validateNewPassword=function(){
+  var password = document.getElementById("new_password");
+  var confirm_password = document.getElementById("repeat_new_password");
+  if (password.value.trim().length <= 9) {
+    password.setCustomValidity("New password not long enough");
   }
   else if(password.value.trim() != confirm_password.value.trim()){
     password.setCustomValidity("");
@@ -87,7 +116,7 @@ signup=function(form){
   var mess = serverstub.signUp(request);
   var errorMessage = document.getElementById('signupMessage');
   errorMessage.innerHTML = mess["message"]  ;
-document.getElementById("personalInfo")
+  document.getElementById("personalInfo")
 
   return false; //not to refresh page
   //var info = [];
@@ -117,59 +146,13 @@ signin=function(form){
 
 };
 
+/*Called when browse button is pressed*/
 browseUser = function(form){
   displayAccountInfo(form.email.value);
   displayAccountMessages(form.email.value);
   return false;
 }
 
-
-
-/*  */
-
-validateNewPassword=function(){
-  var password = document.getElementById("new_password");
-  var confirm_password = document.getElementById("repeat_new_password");
-  if (password.value.trim().length <= 9) {
-    password.setCustomValidity("New password not long enough");
-  }
-  else if(password.value.trim() != confirm_currentBrowsingpassword.value.trim()){
-    password.setCustomValidity("");
-
-    confirm_password.setCustomValidity("currentTabPasswords don't match");
-  }
-  else {
-    confirm_password.setCustomValidity("");
-    password.setCustomValidity("");
-
-  }
-}
-
-postMessage = function(form, mywall = true){
-  var token = localStorage.getItem("token");
-  var recipient;
-  if(mywall){
-    var user = serverstub.getUserDataByToken(token);
-    recipient = user["data"]["email"];
-  }
-  else {
-    recipient = currentBrowsingEmail;
-  }
-  var message = form.contents.value;
-  serverstub.postMessage(token, message, recipient);
-  form.contents.value = "";
-  return false;
-}
-
-refreshMessages = function(myWall){
-  if(myWall){
-    displayAccountMessages();
-  }
-  else{
-    displayAccountMessages(currentBrowsingEmail);
-  }
-  return false;
-}
 
 displayAccountMessages = function(email = null){
   var token = localStorage.getItem("token");
@@ -210,6 +193,7 @@ displayAccountInfo = function(email = null) {
 
   }
   //window.alert(JSON.stringify(user));
+  personalInfo.innerHTML = "";
   for(info in user["data"]){
     personalInfo.innerHTML += "<div> <span>" + info
       + ":</span> 	<span class='align-r'>" +user["data"][info] + "</span> </div>";
@@ -219,7 +203,34 @@ displayAccountInfo = function(email = null) {
 }
 
 
+postMessage = function(form, mywall = true){
+  var token = localStorage.getItem("token");
+  var recipient;
+  if(mywall){
+    var user = serverstub.getUserDataByToken(token);
+    recipient = user["data"]["email"];
+  }
+  else {
+    recipient = currentBrowsingEmail;
+  }
+  var message = form.contents.value;
+  serverstub.postMessage(token, message, recipient);
+  form.contents.value = "";
+  return false;
+}
 
+refreshMessages = function(myWall){
+  if(myWall){
+    displayAccountMessages();
+  }
+  else{
+    displayAccountMessages(currentBrowsingEmail);
+  }
+  return false;
+}
+
+
+/*Called when switching tabs*/
 select=function (tab) {
   var currentTab = document.getElementById(current_tab);
   currentTab.style.backgroundColor = "lightgrey";
