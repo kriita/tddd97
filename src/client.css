@@ -16,15 +16,12 @@ form{
     margin-top: 100px;
     width: 600px;
     height: 400px;
-    //overflow:auto;
 }
 
 .logo{
   float: left;
   display: inline-block;
   width: 340px;
-  //margin-right: 10px;
-  //overflow: auto;
 }
 
 #ImageLogo{
@@ -89,35 +86,18 @@ input{
   float: right;
   clear: right;
   width: 50%;
+  margin: 1px;
 }
 
 select{
   float: right;
   clear: right;
   width: 50%;
+  margin: 1px;
 }
 
-.login input{
-  height: 25%;							<label id="errorLabel" ></label>
-}
-
-.login select{
-  height: 25%;
-}
-
-.signup input{
-  height: 8%;
-}
-
-.signup select{
-  height: 8%;
-}
-
-.inputText{
-  float: left;
-  clear: left;
-  font-size: 14px;
-  height: 8%;
+button {
+  margin: 2px;
 }
 
 .formElemmargin{
@@ -186,7 +166,6 @@ select{
   display: flex;
   width: 250px;
   height: 400px;
-  //overflow: auto;
   flex-direction: column;
 }
 
@@ -331,7 +310,7 @@ select{
   max-width: 100%;
 
   background-color: white;
-
+getUserDataByEmail
   overflow: auto;
   flex-grow: 1;
 }
