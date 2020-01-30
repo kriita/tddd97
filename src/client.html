@@ -18,15 +18,17 @@
 				<div class="login">
 					<form onsubmit="return signin(this);">
 
-						<label for="email" class="inputText formElemMargin">E-mail:</label>
-						<input  class="formElemMargin" required type="email" name="email" value="1@1.1"> <br>
-
-						<label for="password" class="inputText formElemMargin">Password:</label>
+						<div>
+							<label for="email" class="inputText formElemMargin">E-mail:</label>
+						<input  class="formElemMargin" required type="email" name="email" value="1@1.1">
+						</div>
+						<div>
+							<label for="password" class="inputText formElemMargin">Password:</label>
 						<input class="formElemMargin" required type="password" name="password" value="1111111111">
-
-						<label id="errorLabel" ></label>
-						<div class="align-r">
-							<button class="formElemMargin">login</button>
+						</div>
+						<div>
+							<label id="errorLabel" ></label>
+							<button class="formElemMargin align-r">login</button>
 						</div>
 					</form>
 				</div>
@@ -38,39 +40,54 @@
 						Sign up here
 					</h3>
 					<form onsubmit="return signup(this);">
-						<label class="inputText formElemMargin"> First name: </label>
+						<div>
+							<label class="inputText formElemMargin"> First name: </label>
 						<input class="formElemMargin" required type="text" name="firstName" value="1"> <br>
 
-						<label class="inputText formElemMargin"> Family name: </label>
+						</div>
+						
+						<div>
+							<label class="inputText formElemMargin"> Family name: </label>
 						<input class="formElemMargin" required type="text" name="familyName" value="1"> <br>
 
-						<label class="inputText formElemMargin">Gender: </label>
+						</div>
+						<div>
+							<label class="inputText formElemMargin">Gender: </label>
 						<select class="formElemMargin" id="gender" name="gender">
 							<option value="male">Male</option>
 							<option value="female">Female</option>
 							<option value="other">Other</option>
 						</select>
+						</div>
 
-						<label class="inputText formElemMargin">City:</label>
-						<input class="formElemMargin" required type="text" name="city" value="1"> <br>
+						<div>
+							<label class="inputText formElemMargin">City:</label>
+							<input class="formElemMargin" required type="text" name="city" value="1">
+						</div>
+						
+						<div>
+							<label class="inputText formElemMargin">Country:</label>
+							<input class="formElemMargin" required type="text" name="country" value="1">
+						</div>
+						<div>
+							<label class="inputText formElemMargin">Email:</label>
+							<input class="formElemMargin" required type="email" name="email" value="1@1.1">
+						</div>
+						
+						<div>
+							<label class="inputText formElemMargin">Password:</label>
+							<input  class="formElemMargin" oninput = "validatePassword();" required type="password" id = "password" name="password" value="1111111111">
+						</div>
 
-						<label class="inputText formElemMargin">Country:</label>
-						<input class="formElemMargin" required type="text" name="country" value="1">
+						<div>
+							<label class="inputText formElemMargin">Repeat PSW:</label>
+						<input class="formElemMargin" oninput = "validatePassword();" required type="password" id = "confirm_password" name="repPassword" value="1111111111">
+						</div>
+						
 
-						<label class="inputText formElemMargin">Email:</label>
-						<input class="formElemMargin" required type="email" name="email" value="1@1.1"><br>
-
-						<label class="inputText formElemMargin">Password:</label>
-						<input  class="formElemMargin" oninput = "validatePassword();" required type="password" id = "password" name="password" value="1111111111"> <br>
-
-						<label class="inputText formElemMargin">Repeat PSW:</label>
-						<input class="formElemMargin" oninput = "validatePassword();" required type="password" id = "confirm_password" name="repPassword" value="1111111111"> <br>
-
-						<label id="signupMessage" ></label>
-
-						<div class="align-r">
-
-							<button class="formElemMargin">signup</button>
+						<div>
+							<label id="signupMessage" ></label>
+							<button class="formElemMargin align-r">signup</button>
 						</div>
 
 					</form>
@@ -129,7 +146,6 @@
 
 					<div>
 						<div class="subtitle">Wall:</div>
-						<div id="posts"></div>
 						<div id="myWall"></div>
 						<button class="align-r" id="refresh-posts" onclick="return refreshMessages(true);">Refresh</button>
 					</div>
