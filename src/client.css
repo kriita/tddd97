@@ -248,6 +248,12 @@ select{
   margin: 2px;
 }
 
+#browse_user_message{
+  float: left;
+  clear: left;
+  color: red;
+}
+
 /* Account tab */
 #accounttab{
   display: none;

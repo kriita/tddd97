@@ -148,8 +148,15 @@ signin=function(form){
 
 /*Called when browse button is pressed*/
 browseUser = function(form){
-  displayAccountInfo(form.email.value);
-  displayAccountMessages(form.email.value);
+  var token = localStorage.getItem("token");
+  var user_data = serverstub.getUserDataByEmail(token, form.email.value);
+
+  if(user_data["success"]){
+    displayAccountInfo(form.email.value);
+    displayAccountMessages(form.email.value);
+  } else {
+    document.getElementById("browse_user_message").innerHTML = user_data["message"];
+  }
   return false;
 }
 
@@ -166,13 +173,11 @@ displayAccountMessages = function(email = null){
   else {
     posts = serverstub.getUserMessagesByEmail(token,email);
     wall = document.getElementById("browseWall");
-
   }
   wall.innerHTML = "";
   for(message in posts["data"]){
     wall.innerHTML += "<div> <span>" + posts["data"][message]["writer"]
       + ":</span> 	<span class='align-r'>" +posts["data"][message]["content"] + "</span> </div>";
-  //window.alert(JSON.stringify();
   }
 
 }
