@@ -173,10 +173,14 @@ select{
 
 /* Home tab */
 #hometab{
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  padding: 6px;
+  max-width: 100%;
   height: 100%;
   background-color: white;
-  
+
   overflow: auto;
 }
 
@@ -209,12 +213,35 @@ select{
   margin: 6px;
 }
 
+#myWall{
+  display: flex;
+  flex-direction: column;
+}
+
+#mywall div{
+  max-width: 100%;
+  margin: 4px;
+  padding: 5px;
+  border: solid;
+  border-width: 1px;
+  border-color: cyan;
+}
+
+#mywall span{
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
 /* Browse tab */
 #browsetab{
   display: none;
-  width: 100%;
+  flex-direction: column;
+
+  padding: 6px;
+  max-width: 100%;
+
   background-color: white;
-  
+
   overflow: auto;
   flex-grow: 1;
 }
@@ -243,6 +270,27 @@ select{
   margin: 6px;
 }
 
+
+#browseWall{
+  display: flex;
+  flex-direction: column;
+}
+
+#browsewall div{
+  max-width: 100%;
+  margin: 4px;
+  padding: 5px;
+  border: solid;
+  border-width: 1px;
+  border-color: cyan;
+}
+
+#browsewall span{
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
+
 #personalInfoForUser div{
   height: 5%;
   margin: 2px;
@@ -257,7 +305,11 @@ select{
 /* Account tab */
 #accounttab{
   display: none;
-  width: 100%;
+  flex-direction: column;
+
+  padding: 6px;
+  max-width: 100%;
+
   background-color: white;
   
   overflow: auto;

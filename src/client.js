@@ -244,7 +244,7 @@ select=function (tab) {
   currentContent.style.display = "none";
 
   var content = document.getElementById(tab.id + "tab");
-  content.style.display = "block";
+  content.style.display = "flex";
   current_tab = tab.id;
   tab.style.backgroundColor = "grey";
 
