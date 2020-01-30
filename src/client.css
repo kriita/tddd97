@@ -98,7 +98,7 @@ select{
 }
 
 .login input{
-  height: 25%;
+  height: 25%;							<label id="errorLabel" ></label>
 }
 
 .login select{
@@ -233,7 +233,6 @@ select{
   margin: 6px;
 }
 
-<<<<<<< HEAD
 #myWall{
   display: flex;
   flex-direction: column;
@@ -251,10 +250,6 @@ select{
 #mywall span{
   max-width: 100%;
   word-wrap: break-word;
-=======
-#mywall span{
-  max-width: 100%;
->>>>>>> 88401f930375d4d3a46a8ebfbe654233507f98a5
 }
 
 /* Browse tab */
@@ -336,7 +331,7 @@ select{
   max-width: 100%;
 
   background-color: white;
-  
+
   overflow: auto;
   flex-grow: 1;
 }
