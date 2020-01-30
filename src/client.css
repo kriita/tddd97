@@ -37,26 +37,46 @@ form{
   display: flex;
   width: 250px;
   height: 400px;
-  //overflow: auto;
   flex-direction: column;
 }
 
 /* Login box */
 .login{
-  width: 100%;
-  padding-top: 10px;
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 10px;
   overflow: auto;
   background-color: white;
+  max-width: 100%;
+  padding: 10px 6px;
+}
+
+.login form{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 /* Signin box */
 
 .signup{
-  width: 100%;
+  display: flex;
+  flex-direction: column;
   overflow: auto;
   background-color: white;
   flex-grow: 1;
+  justify-content: space-between;
+  padding: 6px;
+  max-width: 100%;
+}
+
+.signup form{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .centered{
@@ -213,6 +233,7 @@ select{
   margin: 6px;
 }
 
+<<<<<<< HEAD
 #myWall{
   display: flex;
   flex-direction: column;
@@ -230,6 +251,10 @@ select{
 #mywall span{
   max-width: 100%;
   word-wrap: break-word;
+=======
+#mywall span{
+  max-width: 100%;
+>>>>>>> 88401f930375d4d3a46a8ebfbe654233507f98a5
 }
 
 /* Browse tab */
