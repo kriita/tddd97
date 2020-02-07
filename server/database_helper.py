@@ -24,3 +24,4 @@ def save_user(email, password, name, familyName, gender, city, country):
         return True
     except:
         return False
+
