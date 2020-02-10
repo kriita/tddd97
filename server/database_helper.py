@@ -16,6 +16,19 @@ def disconnect_db():
         g.db.close()
         g.db = None
 
+def sign_in(email, password):
+    try:
+        user1 = get_db().execute("select * from user where email like ?", [email])
+        user2 = get_db().execute("select * from user where password like ?", [password])
+        user1 == user2
+        
+        token = generate_token(email, password)
+        get_db().execute("insert into logged_in values(?,?)", [email, token])
+        get_db().commit()
+        return token
+    else:
+        return False
+
 
 def save_user(email, password, name, familyName, gender, city, country):
     try:
@@ -25,3 +38,30 @@ def save_user(email, password, name, familyName, gender, city, country):
     except:
         return False
 
+def get_user_data_by_token(token):
+    user_name = signed_in_users(token)
+
+    cursor = get_db().execute('select * from user where name like ?', [user_name])
+    rows = cursor.fetchall()
+    cursor.close()
+    return rows
+
+def get_user_data_by_email(token, email):
+    cursor = get_db().execute('select * from user where email like ?', [email])
+    rows = cursor.fetchall()
+    cursor.close()
+    return rows
+
+def get_user_messages_by_token(token):
+    user_name = signed_in_users(token)
+
+    cursor = get_db().execute('select messages from user where name like ?', [user_name])
+    rows = cursor.fetchall()
+    cursor.close()
+    return rows
+
+def get_user_messages_by_email(token, email):
+    cursor = get_db().execute('select messages from user where email like ?', [email])
+    rows = cursor.fetchall()
+    cursor.close()
+    return rows
