@@ -57,7 +57,13 @@ def sign_out():
 @app.route('/change_password', methods = ['PUT'])
 def change_password():
     data = request.get_json()
-    database_helper.change_password(data['token'], data['newPassword'], data['oldPassword'])
+    result = database_helper.change_password(data['token'], data['newPassword'], data['oldPassword'])
+    if result:
+    	return json.dumps({"msg" : "changed password!"}), 200
+    else:
+    	return json.dumps({"msg" : "old password does not match!"}), 400
+
+
 
 @app.route('/get_user_data_by_token', methods = ['GET'])
 def get_user_data_by_token(token):

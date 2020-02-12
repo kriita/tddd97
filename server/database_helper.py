@@ -51,14 +51,18 @@ def change_password(token,newPassword, oldPassword):
     cursor = get_db().execute("select email from logged_in where token like ?", [token])
     email = cursor.fetchall()
     cursor.close()
-
-    cursor = get_db().execute("select password from user where email like ?", [email])
+    cursor = get_db().execute("select password from user where email like ?", [email[0][0]])
     password = cursor.fetchall()
     cursor.close()
+    print(password[0][0] == oldPassword)
 
-    if password = oldPassword:
-        cursor = get_db().execute("update user set password = ? where email like ?", [newPassword, email])
-    
+    if password[0][0] == oldPassword:
+        get_db().execute("update user set password = ? where email like ?", [newPassword, email[0][0]])
+        get_db().commit()
+        return True;
+    else:
+        return False;
+
 
 def get_user_data_by_token(token):
     user_name = signed_in_users(token)
