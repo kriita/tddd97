@@ -26,7 +26,7 @@ def sign_in(email, password):
         get_db().execute("insert into logged_in values(?,?)", [email, token])
         get_db().commit()
         return token
-    else:
+    except:
         return False
 
 

@@ -15,56 +15,55 @@ def after_request(exception):
 
 @app.route('/signin', methods = ['GET'])
 def signin(email, password):
-	result = database_helper.sign_in(email, password):
-    
+    result = database_helper.sign_in(email, password)
     if result['success'] == True:
-    	return result['token']
+        return result['token']
     elif result['error'] == "password":
-    	return json.dumps({"msg" : "Wrong password!"}), 400
+        return json.dumps({"msg" : "Wrong password!"}), 400
     else:
-    	return json.dumps({"msg" : "User not found"}), 400
+        return json.dumps({"msg" : "User not found"}), 400
 
 
 @app.route('/signup', methods = ['PUT'])
 def signup():
-	data = request.get_json()
+    data = request.get_json()
 
-	#print(data['email'], data['password'],
-	#	data['name'], data['familyName'],
-	#	data['gender'], data['city'],
-	#	data['country'])
+    #print(data['email'], data['password'],
+    #   data['name'], data['familyName'],
+    #   data['gender'], data['city'],
+    #   data['country'])
 
-	result = database_helper.save_user(data['email'], data['password'],
-											data['name'], data['familyName'],
-											data['gender'], data['city'],
-											data['country']
-											)
-	if(result == True):
-		return json.dumps({"msg" : "User created!"}), 200
-	else:
-		return json.dumps({"msg" : "failed!", "data" : data}), 400
+    result = database_helper.save_user(data['email'], data['password'],
+                                            data['name'], data['familyName'],
+                                            data['gender'], data['city'],
+                                            data['country']
+                                            )
+    if(result == True):
+        return json.dumps({"msg" : "User created!"}), 200
+    else:
+        return json.dumps({"msg" : "failed!", "data" : data}), 400
 
 
 
 
 @app.route('/sign_out', methods = ['GET'])
 def sign_out(token):
-	result = database_helper.sign_out(token)
+    result = database_helper.sign_out(token)
     return json.dumps({"msg" : "Signed out!"}), 200
 
 @app.route('/change_password', methods = ['PUT'])
 def change_password(token):
-	data = request.get_json()
+    data = request.get_json()
 
-	if data['oldPassword'] != data['newPassword']:
-		result = database_helper.change_password(token, data['newPassword'])
-    	return json.dumps({"msg" : "Password changed!"}), 200
+    if data['oldPassword'] != data['newPassword']:
+        result = database_helper.change_password(token, data['newPassword'])
+        return json.dumps({"msg" : "Password changed!"}), 200
     else:
-    	return json.dumps({"msg" : "New password can't be the same as the old password!"}), 400
+        return json.dumps({"msg" : "New password can't be the same as the old password!"}), 400
 
 @app.route('/get_user_data_by_token', methods = ['GET'])
 def get_user_data_by_token(token):
-	if token is not None:
+    if token is not None:
         result = database_handler.get_user_data_by_token(token)
         return jsonify(result)
 
@@ -76,7 +75,7 @@ def get_user_data_by_email(token, email):
 
 @app.route('/get_user_messages_by_token', methods = ['GET'])
 def get_user_messages_by_token(token):
-	if token is not None:
+    if token is not None:
         result = database_handler.get_user_messages_by_token(token)
         return jsonify(result)
 
@@ -90,11 +89,11 @@ def get_user_messages_by_email(token, email):
 def post_message(token):
     data = request.get_json()
 
-	result = database_helper.post_message(token, data['msg'], data['email'])
-	if(result['success']  == True):
-		return json.dumps({"msg" : "Message posted!"}), 200
-	else:
-		return json.dumps({"msg" : "failed!", "data" : data}), 400
+    result = database_helper.post_message(token, data['msg'], data['email'])
+    if(result['success']  == True):
+        return json.dumps({"msg" : "Message posted!"}), 200
+    else:
+        return json.dumps({"msg" : "failed!", "data" : data}), 400
 
 
 if __name__ == '__main__':
