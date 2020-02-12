@@ -45,10 +45,14 @@ def signup():
 
 
 
-@app.route('/sign_out', methods = ['GET'])
-def sign_out(token):
-    result = database_helper.sign_out(token)
-    return json.dumps({"msg" : "Signed out!"}), 200
+@app.route('/sign_out', methods = ['POST'])
+def sign_out():
+    data = request.get_json()
+    result = database_helper.sign_out(data['token'])
+    if(result):
+    	return json.dumps({"msg" : "Signed out!"}), 200
+    else:
+    	return json.dumps({"msg" : "ERROR NO USER"}), 400
 
 @app.route('/change_password', methods = ['PUT'])
 def change_password(token):
