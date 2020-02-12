@@ -17,21 +17,19 @@ def disconnect_db():
         g.db = None
 
 def sign_in(email, password):
-    try:
-        print(email, password)
-        cursor = get_db().execute("select * from user where email like ? and password like ?", [email, password])
-        #user2 = get_db().execute("select * from user where password like ?", [password])
-        #user1 == user2
-        rows = cursor.fetchall()
-        cursor.close()
-        token = generate_token(email, password)
-        get_db().execute("insert into logged_in values(?,?)", [email, token])
-        
-        get_db().commit()
-        print (token)
-        return token
-    except:
+    print(email, password)
+    cursor = get_db().execute("select * from user where email like ? and password like ?", [email, password])
+    #user2 = get_db().execute("select * from user where password like ?", [password])
+    #user1 == user2
+    rows = cursor.fetchall()
+    cursor.close()
+    if len(rows) == 0:
         return False
+    print(len(rows))
+    token = generate_token(email, password)
+    get_db().execute("insert into logged_in values(?,?)", [email, token])
+    get_db().commit()
+    return token
 
 def generate_token(email, password):
     return "hejhej"
