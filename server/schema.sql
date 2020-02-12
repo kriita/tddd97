@@ -4,3 +4,5 @@ create table user(email varchar(100), password varchar(10),
 					country varchar(30));
 
 create table logged_in(email varchar(100), token varchar(100));
+
+create table 

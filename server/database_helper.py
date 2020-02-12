@@ -57,33 +57,35 @@ def change_password(token,newPassword, oldPassword):
     cursor.close()
 
     if password = oldPassword:
-        cursor = get_db().execute("update user set password = ? where email like ?", [newPassword, email])
-    
+        cursor = get_db().execute("update user set password = ? where email like ?", [newPassword, email])    
 
 def get_user_data_by_token(token):
-    user_name = signed_in_users(token)
-
-    cursor = get_db().execute('select * from user where name like ?', [user_name])
-    rows = cursor.fetchall()
+    cursor = get_db().execute("select * from logged_in where token like ?", [token])
+    data = cursor.fetchall()
     cursor.close()
-    return rows
+    get_user_data_by_email(token,data['email'])
 
 def get_user_data_by_email(token, email):
-    cursor = get_db().execute('select * from user where email like ?', [email])
-    rows = cursor.fetchall()
+    cursor = get_db().execute("select * from user where email like ?", [email])
+    messages = cursor.fetchall()
     cursor.close()
-    return rows
+    return messages
 
 def get_user_messages_by_token(token):
-    user_name = signed_in_users(token)
-
-    cursor = get_db().execute('select messages from user where name like ?', [user_name])
-    rows = cursor.fetchall()
+    cursor = get_db().execute("select * from logged_in where token like ?", [token])
+    data = cursor.fetchall()
     cursor.close()
-    return rows
+    get_user_messages_by_email[token, data['email']]
+
 
 def get_user_messages_by_email(token, email):
-    cursor = get_db().execute('select messages from user where email like ?', [email])
-    rows = cursor.fetchall()
+    cursor = get_db().execute("select * from messages where target like ?", [email])
+    messages = cursor.fetchall()
     cursor.close()
-    return rows
+    return messages
+
+def post_message(token, message, target):
+    user_data = get_user_data_by_token(token)
+    if get_user_data_by_email(token, target):
+        get_db().execute("insert into messages values(?,?,?);", [user_data['email'], message, target])
+        get_db().commit()
