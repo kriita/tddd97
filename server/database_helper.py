@@ -18,16 +18,24 @@ def disconnect_db():
 
 def sign_in(email, password):
     try:
-        user1 = get_db().execute("select * from user where email like ?", [email])
-        user2 = get_db().execute("select * from user where password like ?", [password])
-        user1 == user2
-        
+        print(email, password)
+        cursor = get_db().execute("select * from user where email like ? and password like ?", [email, password])
+        #user2 = get_db().execute("select * from user where password like ?", [password])
+        #user1 == user2
+        rows = cursor.fetchall()
+        cursor.close()
         token = generate_token(email, password)
         get_db().execute("insert into logged_in values(?,?)", [email, token])
+        
         get_db().commit()
+        print (token)
         return token
     except:
         return False
+
+def generate_token(email, password):
+    return "hejhej"
+
 
 
 def save_user(email, password, name, familyName, gender, city, country):

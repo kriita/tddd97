@@ -13,16 +13,14 @@ def after_request(exception):
     database_helper.disconnect_db()
 
 
-@app.route('/signin', methods = ['GET'])
+@app.route('/signin', methods = ['PUT'])
 def signin():
     data = request.get_json()
     result = database_helper.sign_in(data['email'], data['password'])
-    if result['success'] == True:
-        return result['token']
-    elif result['error'] == "password":
-        return json.dumps({"msg" : "Wrong password!"}), 400
+    if result:
+        return json.dumps({"token" : result})
     else:
-        return json.dumps({"msg" : "User not found"}), 400
+    	return json.dumps({"msg" : "email or password wrong!"}), 400
 
 
 @app.route('/signup', methods = ['PUT'])
