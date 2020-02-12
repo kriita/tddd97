@@ -14,8 +14,9 @@ def after_request(exception):
 
 
 @app.route('/signin', methods = ['GET'])
-def signin(email, password):
-    result = database_helper.sign_in(email, password)
+def signin():
+    data = request.get_json()
+    result = database_helper.sign_in(data['email'], data['password'])
     if result['success'] == True:
         return result['token']
     elif result['error'] == "password":
