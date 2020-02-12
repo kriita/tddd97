@@ -31,8 +31,6 @@ def sign_in(email, password):
 def generate_token(email, password):
     return str(uuid.uuid4())
 
-
-
 def save_user(email, password, name, familyName, gender, city, country):
     try:
         get_db().execute("insert into user values(?,?,?,?,?,?,?);", [email, password, name, familyName, gender, city, country])
@@ -49,6 +47,18 @@ def sign_out(token):
     except:
         return False
 
+def change_password(token,newPassword, oldPassword):
+    cursor = get_db().execute("select email from logged_in where token like ?", [token])
+    email = cursor.fetchall()
+    cursor.close()
+
+    cursor = get_db().execute("select password from user where email like ?", [email])
+    password = cursor.fetchall()
+    cursor.close()
+
+    if password = oldPassword:
+        cursor = get_db().execute("update user set password = ? where email like ?", [newPassword, email])
+    
 
 def get_user_data_by_token(token):
     user_name = signed_in_users(token)
