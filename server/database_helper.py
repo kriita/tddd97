@@ -21,7 +21,7 @@ def sign_in(email, password):
     cursor = get_db().execute("select * from user where email like ? and password like ?", [email, password])
     rows = cursor.fetchall()
     cursor.close()
-    if len(rows) != 0:
+    if len(rows) == 0:
         return False
     token = generate_token(email, password)
     get_db().execute("insert into logged_in values(?,?)", [email, token])
@@ -100,7 +100,7 @@ def get_user_messages_by_token(token):
     cursor = get_db().execute("select * from logged_in where token like ?", [token])
     data = cursor.fetchall()
     cursor.close()
-    return get_user_messages_by_email(token, data[0])
+    return get_user_messages_by_email(token, data[0][0])
 
 def get_user_messages_by_email(token, email):
     cursor = get_db().execute("select * from messages where target like ?", [email])
