@@ -5,4 +5,4 @@ create table user(email varchar(100), password varchar(10),
 
 create table logged_in(email varchar(100), token varchar(100));
 
-create table 
+create table messages(sender varchar(100), message varchar(250), target varchar(100));
