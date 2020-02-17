@@ -16,13 +16,14 @@ def after_request(exception):
 @app.route('/signin', methods = ['PUT'])
 def signin():
     data = request.get_json()
+    print(data['email'])
     if not database_helper.check_if_user_in_database(data['email']):
         return json.dumps({"success" : False, "message" : "User doesn't exist!", "data" : {}}), 400
+    if database_helper.check_if_user_logged_in(data['email']):
+        return json.dumps({"success" : False, "message" : "User already logged in!", "data" : {}}), 400
     result = database_helper.sign_in(data['email'], data['password'])
     if not result:
         return json.dumps({"success" : False, "message" : "Wrong password!", "data" : {}}), 400
-    if database_helper.check_if_user_logged_in(data['email']):
-        return json.dumps({"success" : False, "message" : "User already logged in!", "data" : {}}), 400
     return json.dumps({"success" : True, "message" : "User logged in!", "data" : {"token" : result}}), 200
 
 @app.route('/signup', methods = ['PUT'])
