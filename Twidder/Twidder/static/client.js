@@ -92,6 +92,41 @@ validateNewPassword=function(){
   }
 }
 
+send_req = function(data, type, route){
+  window.alert("SEND REQ");
+  
+  try{
+
+    var req = new XMLHttpRequest();
+    req.open(type, route, true);
+    req.setRequestHeader("Content-type", "application/json");
+    req.onreadystatechange = function(){
+      window.alert(this.readyState)
+      if (this.readyState == 4){
+        window.alert(status)
+        if (this.status == 200){
+        
+
+          var response = JSON.parse(req.responseText);
+          console.log(response);
+        }else if (this.status == 400){
+
+          var response = JSON.parse(req.responseText)
+        }
+      }
+    };
+    req.send(JSON.stringify(data));
+  }
+    catch(e){
+      window.alert(e);
+    console.error(e);
+  }
+  window.alert("Finished");
+  return response;
+
+
+}
+
 signout = function() {
   var token = localStorage.getItem("token");
   serverstub.signOut(token)
@@ -113,7 +148,8 @@ signup=function(form){
   var repPassword = form.repPassword.value.trim();
   var request = {"email" : email, "password" : password, "firstname" : firstName
                 , "familyname" : familyName, "gender" : gender, "city" : city, "country" : country};
-  var mess = serverstub.signUp(request);
+  //var mess = serverstub.signUp(request);
+  var response = send_req(request, "PUT", "/signup")
   var errorMessage = document.getElementById('signupMessage');
   errorMessage.innerHTML = mess["message"]  ;
   document.getElementById("personalInfo")
