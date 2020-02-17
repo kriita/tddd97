@@ -1,9 +1,8 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 import json;
+import Twidder.database_helper
 
 app = Flask(__name__)
-
-import Twidder.database_helper
 
 app.debug = True
 
@@ -11,11 +10,14 @@ app.debug = True
 def after_request(exception):
     database_helper.disconnect_db()
 
+@app.route('/')
+def index():
+    return send_from_directory('static', 'client.html')
+
 
 @app.route('/signin', methods = ['PUT'])
 def signin():
     data = request.get_json()
-    print(data['email'])
     if not database_helper.check_if_user_in_database(data['email']):
         return json.dumps({"success" : False, "message" : "User doesn't exist!", "data" : {}}), 400
     if database_helper.check_if_user_logged_in(data['email']):
@@ -35,11 +37,13 @@ def signup():
         return json.dumps({"success" : False, "message" : "User already exists!", "data" : {}}), 400
 
     result = database_helper.save_user(data['email'], data['password'],
-                                            data['name'], data['familyName'],
+                                            data['firstname'], data['familyname'],
                                             data['gender'], data['city'],
                                             data['country']
                                             )
     return json.dumps({"success" : True, "message" : "User created!", "data" : {}}), 200
+
+
 
 @app.route('/sign_out', methods = ['POST'])
 def sign_out():
@@ -49,6 +53,9 @@ def sign_out():
         return json.dumps({"success" : False, "message" : "User not logged in!", "data" : {}}), 400        
     result = database_helper.sign_out(data['token'])
     return json.dumps({"success" : True, "message" : "Signed out!", "data" : {}}), 200
+
+
+
 
 @app.route('/change_password', methods = ['PUT'])
 def change_password():
@@ -63,6 +70,8 @@ def change_password():
     else:
         return json.dumps({"success" : False, "message" : "Invalid token!", "data" : {}}), 400
 
+
+
 @app.route('/get_user_data_by_token', methods = ['GET'])
 def get_user_data_by_token():
     data = request.get_json()
@@ -71,6 +80,8 @@ def get_user_data_by_token():
         return json.dumps({"success" : True, "message" : "User data received!", "data" : result}), 200
     else:
         return json.dumps({"success" : False, "message" : "Invalid token!", "data" : {}}), 400
+
+
 
 @app.route('/get_user_data_by_email', methods = ['GET'])
 def get_user_data_by_email():
@@ -113,6 +124,8 @@ def post_message():
             return json.dumps({"success" : False, "message" : "Target email invalid!", "data" : {}}), 400
     else:
         return json.dumps({"success" : False, "message" : "Invalid token!", "data" : {}}), 400
+
+
 
 if __name__ == '__main__':
     app.run()

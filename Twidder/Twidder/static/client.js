@@ -27,6 +27,7 @@ window.onload=function(){
 
 };
 
+
 /*Called when input is given on signup */
 validatePassword=function(){
   var password = document.getElementById("password");
@@ -92,52 +93,45 @@ validateNewPassword=function(){
   }
 }
 
-send_req = function(data, type, route){
-  window.alert("SEND REQ");
-  
+signout = function() {
+  var token = localStorage.getItem("token");
+  var request = {"token": token}
+  //serverstub.signOut(token)
+  localStorage.removeItem("token");
   try{
 
     var req = new XMLHttpRequest();
-    req.open(type, route, true);
+    req.open("POST", "/sign_out", true);
     req.setRequestHeader("Content-type", "application/json");
     req.onreadystatechange = function(){
-      window.alert(this.readyState)
       if (this.readyState == 4){
-        window.alert(status)
         if (this.status == 200){
         
 
-          var response = JSON.parse(req.responseText);
+          response = JSON.parse(req.responseText);
           console.log(response);
         }else if (this.status == 400){
 
-          var response = JSON.parse(req.responseText)
+          response = JSON.parse(req.responseText)
         }
       }
+      var errorMessage = document.getElementById('signupMessage');
+      errorMessage.innerHTML = response["message"]  ;
+      document.getElementById("personalInfo")
+
     };
-    req.send(JSON.stringify(data));
+    req.send(JSON.stringify(request));
   }
     catch(e){
       window.alert(e);
     console.error(e);
   }
-  window.alert("Finished");
-  return response;
-
-
-}
-
-signout = function() {
-  var token = localStorage.getItem("token");
-  serverstub.signOut(token)
-  localStorage.removeItem("token");
   displayView(document.getElementById('welcomeview'));
   current_tab = "home";
 }
 
 
 signup=function(form){
-
   var firstName = form.firstName.value.trim();
   var familyName = form.familyName.value.trim();
   var gender = form.gender.value.trim();
@@ -149,10 +143,36 @@ signup=function(form){
   var request = {"email" : email, "password" : password, "firstname" : firstName
                 , "familyname" : familyName, "gender" : gender, "city" : city, "country" : country};
   //var mess = serverstub.signUp(request);
-  var response = send_req(request, "PUT", "/signup")
-  var errorMessage = document.getElementById('signupMessage');
-  errorMessage.innerHTML = mess["message"]  ;
-  document.getElementById("personalInfo")
+
+
+  try{
+
+    var req = new XMLHttpRequest();
+    req.open("PUT", "/signup", true);
+    req.setRequestHeader("Content-type", "application/json");
+    req.onreadystatechange = function(){
+      if (this.readyState == 4){
+        if (this.status == 200){
+        
+
+          response = JSON.parse(req.responseText);
+          console.log(response);
+        }else if (this.status == 400){
+
+          response = JSON.parse(req.responseText)
+        }
+      }
+      var errorMessage = document.getElementById('signupMessage');
+      errorMessage.innerHTML = response["message"]  ;
+      document.getElementById("personalInfo")
+
+    };
+    req.send(JSON.stringify(request));
+  }
+    catch(e){
+      window.alert(e);
+    console.error(e);
+  }
 
   return false; //not to refresh page
   //var info = [];
@@ -161,22 +181,48 @@ signup=function(form){
 };
 
 signin=function(form){
-
   var email = form.email.value.trim();
   var password = form.password.value.trim();
-  var mess = serverstub.signIn(email,password);
-  var token = mess["data"];
-  if(token != null){
-    localStorage.setItem("token", token);
-    displayView(document.getElementById('profileView'));
-    displayAccountInfo();
-    displayAccountMessages();
+  var request = {"email" : email, "password" : password}
+  //var mess = serverstub.signIn(email,password);
+ // var mess = send_req(request, "PUT", "/signin")
+  try{
 
+    var req = new XMLHttpRequest();
+    req.open("PUT", "/signin", true);
+    req.setRequestHeader("Content-type", "application/json");
+    req.onreadystatechange = function(){
+      if (this.readyState == 4){
+        if (this.status == 200){
+        
+
+          response = JSON.parse(req.responseText);
+          console.log(response);
+        }else if (this.status == 400){
+
+          response = JSON.parse(req.responseText)
+        }
+      }
+      var token = response["data"]["token"];
+      if(token != null){
+        localStorage.setItem("token", token);
+        displayView(document.getElementById('profileView'));
+        displayAccountInfo();
+        displayAccountMessages();
+
+      }
+      else{
+        var errorMessage = document.getElementById('errorLabel');
+        errorMessage.innerHTML = mess["message"];
+      }
+    };
+    req.send(JSON.stringify(request));
   }
-  else{
-    var errorMessage = document.getElementById('errorLabel');
-    errorMessage.innerHTML = mess["message"];
+    catch(e){
+      window.alert(e);
+    console.error(e);
   }
+
 
   return false;
 
