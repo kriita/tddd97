@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"/>
+	<link href="client.css" type="text/css" rel="stylesheet">
+	<script src="client.js" type="text/javascript"></script>
+	<script src="serverstub.js" type="text/javascript"></script>
+	<script type="text/view" id="welcomeview">
+		<!-- UI body -->
+		<div class="welcome">
+
+			<div class="logo">
+				<img id="Imagelogo" src="../res/t_logo.png" alt="NO FILE FOUND">
+			</div>
+
+			<div class="credentials">
+
+				<!-- Login box -->
+
+				<div class="login">
+					<form onsubmit="return signin(this);">
+
+						<div>
+							<label for="email" class="inputText formElemMargin">E-mail:</label>
+						<input  class="formElemMargin" required type="email" name="email" value="">
+						</div>
+						<div>
+							<label for="password" class="inputText formElemMargin">Password:</label>
+						<input class="formElemMargin" required type="password" name="password" value="">
+						</div>
+						<div>
+							<label id="errorLabel" ></label>
+							<button class="formElemMargin align-r">login</button>
+						</div>
+					</form>
+				</div>
+
+				<!-- Signup box -->
+
+				<div class="signup">
+					<h3 class="centered">
+						Sign up here
+					</h3>
+					<form onsubmit="return signup(this);">
+						<div>
+							<label class="inputText formElemMargin"> First name: </label>
+						<input class="formElemMargin" required type="text" name="firstName" value=""> <br>
+
+						</div>
+
+						<div>
+							<label class="inputText formElemMargin"> Family name: </label>
+						<input class="formElemMargin" required type="text" name="familyName" value=""> <br>
+
+						</div>
+						<div>
+							<label class="inputText formElemMargin">Gender: </label>
+						<select class="formElemMargin" id="gender" name="gender">
+							<option value="male">Male</option>
+							<option value="female">Female</option>
+							<option value="other">Other</option>
+						</select>
+						</div>
+
+						<div>
+							<label class="inputText formElemMargin">City:</label>
+							<input class="formElemMargin" required type="text" name="city" value="">
+						</div>
+
+						<div>
+							<label class="inputText formElemMargin">Country:</label>
+							<input class="formElemMargin" required type="text" name="country" value="">
+						</div>
+						<div>
+							<label class="inputText formElemMargin">Email:</label>
+							<input class="formElemMargin" required type="email" name="email" value="">
+						</div>
+
+						<div>
+							<label class="inputText formElemMargin">Password:</label>
+							<input  class="formElemMargin" oninput = "validatePassword();" required type="password" id = "password" name="password" value="">
+						</div>
+
+						<div>
+							<label class="inputText formElemMargin">Repeat PSW:</label>
+						<input class="formElemMargin" oninput = "validatePassword();" required type="password" id = "confirm_password" name="repPassword" value="">
+						</div>
+
+
+						<div>
+							<label id="signupMessage" ></label>
+							<button class="formElemMargin align-r">signup</button>
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+	</script>
+ 	<script type="text/view" id="profileView">
+ 		<!-- UI body -->
+		<div class="profile">
+
+			<div class="logo">
+				<img id="Imagelogo" src="../res/t_logo.png" alt="NO FILE FOUND">
+			</div>
+
+			<div class="interface">
+
+				<!-- Menu -->
+
+				<div class="menu">
+					<div class="tab" id="home" onclick="select(this);">Home</div>
+					<div class="tab" id="browse" onclick="select(this);">Browse</div>
+					<div class="tab" id="account" onclick="select(this);">Account</div>
+				</div>
+
+				<!-- Tab view -->
+
+				<div id="hometab">
+
+					<!-- Personal information -->
+
+					<div class="info">
+						<div class="subtitle">
+							Personal information:
+						</div>
+						<div id="personalInfo">
+
+						</div>
+
+					</div>
+
+					<!-- New post -->
+
+					<div>
+						<div class="subtitle">
+							New post:
+						</div>
+						<form onsubmit="return postMessage(this);">
+							<label>Content:</label>
+							<input required class="align-r" type="text" name="contents">
+							<button class="align-r">Submit</button>
+						</form>
+					</div>
+
+					<!-- Wall -->
+
+					<div>
+						<div class="subtitle">Wall:</div>
+						<div id="myWall"></div>
+						<button class="align-r" id="refresh-posts" onclick="return refreshMessages(true);">Refresh</button>
+					</div>
+				</div>
+
+				<div id="browsetab">
+					<div>
+						<form onsubmit="return browseUser(this);">
+							<label>View user:</label>
+							<input type="email" name="email">
+							<button class="align-r">Search</button>
+							<label id="browse_user_message"></label>
+						</form>
+					</div>
+					<div id="browsePage">
+						<div class="subtitle">Personal information:</div>
+						<div class="browseInfo" id="personalInfoForUser"></div>
+						<form onsubmit="return postMessage(this, false);">
+							<label>Content:</label>
+							<input required class="align-r" type="text" name="contents">
+							<button class="align-r">Submit</button>
+						</form>
+						<div class="subtitle">Wall:</div>
+						<div class="browseWall" id="browseWall"></div>
+						<button class="align-r" id="refresh-browse" onclick="return refreshMessages(false);">Refresh</button>
+					</div>
+				</div>
+
+				<div id="accounttab">
+
+					<div class="resetpassword">
+						<div class="subtitle">
+							Reset password:
+						</div>
+
+						<form onsubmit="resetPassword(this); return false;">
+							<label>Old password:</label>
+							<input required type="password" name="password"><br>
+
+							<label>New password:</label>
+							<input type="password" name="new_password" id="new_password" oninput="validateNewPassword()">
+
+							<label>Repeat new password:</label>
+							<input type="password" name="repeat_new_password" id="repeat_new_password" oninput="validateNewPassword()">
+
+
+							<button class="align-r">Reset password</button>
+						</form>
+						<label id="reset_password_message"></label>
+					</div>
+
+					<div class="signout">
+						<button class="align-r" onclick="signout(); return false;">
+							Sign out
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+ 	</script>
+	<title> TWIDDER </title>
+</head>
+<body>
+  <div id="content">
+
+  </div>
+</body>
+</html>

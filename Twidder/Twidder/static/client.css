@@ -1,0 +1,347 @@
+body {
+  display: block;
+  width: auto;
+  height: auto;
+  background-color: cyan;
+}
+
+form{
+  margin-bottom: 0;
+}
+
+/* Welecome page */
+
+.welcome{
+    margin: auto;
+    margin-top: 100px;
+    width: 600px;
+    height: 400px;
+}
+
+.logo{
+  float: left;
+  display: inline-block;
+  width: 340px;
+}
+
+#ImageLogo{
+  max-width:100%;
+  max-height:100%;
+}
+
+.credentials{
+  float: right;
+  display: flex;
+  width: 250px;
+  height: 400px;
+  flex-direction: column;
+}
+
+/* Login box */
+.login{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  overflow: auto;
+  background-color: white;
+  max-width: 100%;
+  padding: 10px 6px;
+}
+
+.login form{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Signin box */
+
+.signup{
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  background-color: white;
+  flex-grow: 1;
+  justify-content: space-between;
+  padding: 6px;
+  max-width: 100%;
+}
+
+.signup form{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.centered{
+  text-align: center;
+}
+
+/* Form formatting */
+
+input{
+  float: right;
+  clear: right;
+  width: 50%;
+  margin: 1px;
+}
+
+select{
+  float: right;
+  clear: right;
+  width: 50%;
+  margin: 1px;
+}
+
+button {
+  margin: 2px;
+}
+
+.formElemmargin{
+  margin-top: 1px;
+  margin-bottom: 1px;
+
+}
+
+.align-r{
+  float: right;
+  clear: right;
+}
+
+#errorLabel{
+  float: left;
+  clear: left;
+  color: red;
+}
+
+#signupMessage{
+  float: left;
+  clear: left;
+}
+
+/* Profile page */
+
+.profile{
+    margin: auto;
+    margin-top: 100px;
+    width: 600px;
+    height: 400px;
+}
+
+.subtitle{
+  font-size: 1.5rem;
+  margin: 8px 2px;
+}
+
+/* Menu */
+.menu{
+  max-width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: white;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.tab{
+  padding: 4px;
+  background-color: lightgrey;
+}
+
+#home {
+  background-color: grey;
+}
+
+.menu div.tab:hover{
+  background-color: grey;
+}
+
+
+.interface{
+  float: right;
+  display: flex;
+  width: 250px;
+  height: 400px;
+  flex-direction: column;
+}
+
+
+/* Home tab */
+#hometab{
+  display: flex;
+  flex-direction: column;
+
+  padding: 6px;
+  max-width: 100%;
+  height: 100%;
+  background-color: white;
+
+  overflow: auto;
+}
+
+#personalInfo div{
+  height: 5%;
+  margin: 2px;
+}
+
+#hometab form{
+  display: inline-block;
+  width: 100%;
+}
+
+#hometab input{
+  height: 8%;
+  width: 70%;
+  margin: 2px;
+}
+
+#hometab label{
+  float: left;
+  clear: left;
+  font-size: 14px;
+  height: 8%;
+  max-width: 40%;
+  margin: 2px;
+}
+
+#hometab button{
+  margin: 6px;
+}
+
+#myWall{
+  display: flex;
+  flex-direction: column;
+}
+
+#mywall div{
+  max-width: 100%;
+  margin: 4px;
+  padding: 5px;
+  border: solid;
+  border-width: 1px;
+  border-color: cyan;
+}
+
+#mywall span{
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
+/* Browse tab */
+#browsetab{
+  display: none;
+  flex-direction: column;
+
+  padding: 6px;
+  max-width: 100%;
+
+  background-color: white;
+
+  overflow: auto;
+  flex-grow: 1;
+}
+
+#browsetab form{
+  display: inline-block;
+  width: 100%;
+}
+
+#browsetab input{
+  height: 8%;
+  width: 70%;
+  margin: 2px;
+}
+
+#browsetab label{
+  float: left;
+  clear: left;
+  font-size: 14px;
+  height: 8%;
+  max-width: 40%;
+  margin: 2px;
+}
+
+#browsetab button{
+  margin: 6px;
+}
+
+
+#browseWall{
+  display: flex;
+  flex-direction: column;
+}
+
+#browsewall div{
+  max-width: 100%;
+  margin: 4px;
+  padding: 5px;
+  border: solid;
+  border-width: 1px;
+  border-color: cyan;
+}
+
+#browsewall span{
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
+
+#personalInfoForUser div{
+  height: 5%;
+  margin: 2px;
+}
+
+#browse_user_message{
+  float: left;
+  clear: left;
+  color: red;
+}
+
+/* Account tab */
+#accounttab{
+  display: none;
+  flex-direction: column;
+
+  padding: 6px;
+  max-width: 100%;
+
+  background-color: white;
+getUserDataByEmail
+  overflow: auto;
+  flex-grow: 1;
+}
+
+#accounttab form{
+  display: inline-block;
+  height: auto;
+}
+
+#accounttab input{
+  height: 8%;
+  margin: 2px;
+}
+
+#accounttab label{
+  float: left;
+  clear: left;
+  font-size: 14px;
+  height: 8%;
+  max-width: 40%;
+  margin: 2px;
+}
+
+#accounttab button{
+  margin: 6px;
+}
+
+.resetpassword{
+  display: block;
+}
+
+.signout{
+  display: block;
+}
