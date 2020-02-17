@@ -33,7 +33,7 @@ validatePassword=function(){
   var password = document.getElementById("password");
   var confirm_password = document.getElementById("confirm_password");
   if (password.value.trim().length <= 9) {
-    password.setCustomValidity("Password nocurrentBrowsingt long enough");
+    password.setCustomValidity("Password not long enough");
   }
   else if(password.value.trim() != confirm_password.value.trim()){
     password.setCustomValidity("");
@@ -93,41 +93,41 @@ validateNewPassword=function(){
   }
 }
 
+
 signout = function() {
   var token = localStorage.getItem("token");
-  var request = {"token": token}
-  //serverstub.signOut(token)
-  localStorage.removeItem("token");
+  var request = {"token" : token}
   try{
-
     var req = new XMLHttpRequest();
     req.open("POST", "/sign_out", true);
     req.setRequestHeader("Content-type", "application/json");
     req.onreadystatechange = function(){
       if (this.readyState == 4){
         if (this.status == 200){
-        
-
           response = JSON.parse(req.responseText);
           console.log(response);
+          localStorage.removeItem("token");
+          displayView(document.getElementById('welcomeview'));
+          current_tab = "home";
         }else if (this.status == 400){
 
           response = JSON.parse(req.responseText)
+          var response = JSON.parse(req.responseText);
+        } else if (this.status == 400){
+          var response = JSON.parse(req.responseText)
         }
       }
-      var errorMessage = document.getElementById('signupMessage');
-      errorMessage.innerHTML = response["message"]  ;
-      document.getElementById("personalInfo")
+
 
     };
     req.send(JSON.stringify(request));
   }
-    catch(e){
-      window.alert(e);
-    console.error(e);
+  catch(e){
+    window.alert(e);
+  console.error(e);
   }
-  displayView(document.getElementById('welcomeview'));
-  current_tab = "home";
+
+  return false
 }
 
 
@@ -194,27 +194,20 @@ signin=function(form){
     req.onreadystatechange = function(){
       if (this.readyState == 4){
         if (this.status == 200){
-        
-
           response = JSON.parse(req.responseText);
+          var token = response["data"]["token"]
+          localStorage.setItem("token", token);
+          displayView(document.getElementById('profileView'));
+          displayAccountInfo();
+          displayAccountMessages();
           console.log(response);
         }else if (this.status == 400){
-
           response = JSON.parse(req.responseText)
+          var errorMessage = document.getElementById('errorLabel');
+          errorMessage.innerHTML = response["message"];
         }
       }
-      var token = response["data"]["token"];
-      if(token != null){
-        localStorage.setItem("token", token);
-        displayView(document.getElementById('profileView'));
-        displayAccountInfo();
-        displayAccountMessages();
-
-      }
-      else{
-        var errorMessage = document.getElementById('errorLabel');
-        errorMessage.innerHTML = mess["message"];
-      }
+      
     };
     req.send(JSON.stringify(request));
   }
@@ -279,7 +272,6 @@ displayAccountInfo = function(email = null) {
     currentBrowsingEmail = email;
 
   }
-  //window.alert(JSON.stringify(user));
   personalInfo.innerHTML = "";
   for(info in user["data"]){
     personalInfo.innerHTML += "<div> <span>" + info

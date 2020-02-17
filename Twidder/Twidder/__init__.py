@@ -14,7 +14,6 @@ def after_request(exception):
 def index():
     return send_from_directory('static', 'client.html')
 
-
 @app.route('/signin', methods = ['PUT'])
 def signin():
     data = request.get_json()
