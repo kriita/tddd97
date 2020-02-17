@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 import json;
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 
 import Twidder.database_helper
 
@@ -11,6 +11,9 @@ app.debug = True
 def after_request(exception):
     database_helper.disconnect_db()
 
+@app.route('/')
+def root():
+    return app.send_static_file('client.html')
 
 @app.route('/signin', methods = ['PUT'])
 def signin():
@@ -35,7 +38,7 @@ def signup():
         return json.dumps({"success" : False, "message" : "User already exists!", "data" : {}}), 400
 
     result = database_helper.save_user(data['email'], data['password'],
-                                            data['name'], data['familyName'],
+                                            data['firstname'], data['familyname'],
                                             data['gender'], data['city'],
                                             data['country']
                                             )
