@@ -84,9 +84,9 @@ def get_user_data_by_token():
 
 @app.route('/get_user_data_by_email', methods = ['GET'])
 def get_user_data_by_email(token = None, email = None):
-    #data = request.get_json()
     token = request.args.get("token")
     email = request.args.get("email")
+
     if database_helper.check_if_user_logged_in_token(token):
         result = database_helper.get_user_data_by_email(token, email)
         return json.dumps({"success" : True, "message" : "User data received!", "data" : result}), 200
@@ -94,21 +94,22 @@ def get_user_data_by_email(token = None, email = None):
         return json.dumps({"success" : False, "message" : "Invalid token!", "data" : {}}), 400
 
 @app.route('/get_user_messages_by_token', methods = ['GET'])
-def get_user_messages_by_token():
-    data = request.get_json()
+def get_user_messages_by_token(token = None):
+    token = request.args.get("token")
 
-    if database_helper.check_if_user_logged_in_token(data['token']):
-        result = database_helper.get_user_messages_by_token(data['token'])
+    if database_helper.check_if_user_logged_in_token(token):
+        result = database_helper.get_user_messages_by_token(token)
         return json.dumps({"success" : True, "message" : "User messages received!", "data" : result}), 200
     else:
         return json.dumps({"success" : False, "message" : "Invalid token!", "data" : {}}), 400
 
 @app.route('/get_user_messages_by_email', methods = ['GET'])
-def get_user_messages_by_email():
-    data = request.get_json()
+def get_user_messages_by_email(token = None, email=None):
 
-    if database_helper.check_if_user_logged_in(data['email']):
-        result = database_helper.get_user_messages_by_email(data['token'], data['email'])
+    token = request.args.get("token")
+    email = request.args.get("email")
+    if database_helper.check_if_user_logged_in(email):
+        result = database_helper.get_user_messages_by_email(token, email)
         return json.dumps({"success" : True, "message" : "User messages received!", "data" : result}), 200
     else:
         return json.dumps({"success" : False, "message" : "Invalid token!", "data" : {}}), 400

@@ -18,7 +18,7 @@ window.onload=function(){
   if(token){ // if user is logged in
      displayView(document.getElementById('profileView')); // load profile
      //displayAccountInfo();
-     //displayAccountMessages();
+     displayAccountMessages();
 
   }
   else{
@@ -57,21 +57,41 @@ resetPassword=function(form){
     return false;
   }
   var token = localStorage.getItem("token");
-  var message = serverstub.changePassword(token,password,new_password);
-  var errorMessage = document.getElementById('reset_password_message');
+  var request = {"token" : token, "newPassword" : new_password, "oldPassword" : password}
+  
 
-  if(!message["success"]){
-    errorMessage.style.color = "red";
-  }
-  else {
-    errorMessage.style.color = "green";
-    form.password.value = "";
-    form.new_password.value = "";
-    form.repeat_new_password.value = "";
-  }
+  try{
+    var req = new XMLHttpRequest();
+    req.open("PUT", "/change_password", true);
+    req.setRequestHeader("Content-type", "application/json");
+    req.onreadystatechange = function(){
+      if (this.readyState == 4){
+        var response = JSON.parse(req.responseText);
+        var errorMessage = document.getElementById('reset_password_message');
 
-  errorMessage.innerHTML = message["message"];
+        if (this.status == 200){
+          errorMessage.style.color = "green";
+          form.password.value = "";
+          form.new_password.value = "";
+          form.repeat_new_password.value = "";
+        }else if (this.status == 400){
+           errorMessage.style.color = "red";
+
+      }
+
+      errorMessage.innerHTML = response["message"];
+    } 
+
+    };
+    req.send(JSON.stringify(request));
+  }
+  catch(e){
+    window.alert(e);
+  console.error(e);
+  }
 }
+
+
 
 
 /* Creates validity on password input when password is reset */
@@ -258,18 +278,68 @@ displayAccountMessages = function(email = null){
   var wall;
 
   if(!email){
-    posts = serverstub.getUserMessagesByToken(token);
-    wall = document.getElementById("myWall");
+    //posts = serverstub.getUserMessagesByToken(token);
+    try{
+      var req = new XMLHttpRequest();
+      req.open("GET", "/get_user_messages_by_token?token=" + token, true);
+      req.setRequestHeader("Content-type", "application/json");
+      req.onreadystatechange = function(){
+        if (this.readyState == 4){
+          wall = document.getElementById("myWall");
+
+          if (this.status == 200){
+            response = JSON.parse(req.responseText);
+
+            wall.innerHTML = "";
+            messages = response["data"]["messages"];
+            for(var message in messages){
+              wall.innerHTML += "<div> <span>" + messages[message][0]
+                + ":</span>   <span class='align-r'>" + messages[message][1] + "</span> </div>";
+            }
+
+          }else if (this.status == 400){
+          }
+        }
+      };
+      req.send(null);
+    }
+    catch(e){
+      window.alert(e);
+    console.error(e);
+    }
   }
-  else {
-    posts = serverstub.getUserMessagesByEmail(token,email);
-    wall = document.getElementById("browseWall");
+
+  else
+  {
+    try{
+      var req = new XMLHttpRequest()
+      req.open("GET", "/get_user_messages_by_email?token=" + token + "&email=" +  email, true)
+      req.setRequestHeader("Content-type", "application/json");
+      req.onreadystatechange = function(){
+        if (this.readyState == 4){
+          wall = document.getElementById("browseWall")
+
+          if (this.status == 200){
+            response = JSON.parse(req.responseText);
+            wall.innerHTML = "";
+            for(message in response["messages"]){
+              wall.innerHTML += "<div> <span>" + response[message]["writer"]
+                + ":</span>   <span class='align-r'>" +response["data"][message]["content"] + "</span> </div>";
+            }
+
+          }else if (this.status == 400){
+          }
+        }
+      };
+      req.send(null);
+    }
+    catch(e){
+      window.alert(e);
+      console.error(e);
+    }
+    //posts = serverstub.getUserMessagesByEmail(token,email);
   }
-  wall.innerHTML = "";
-  for(message in posts["data"]){
-    wall.innerHTML += "<div> <span>" + posts["data"][message]["writer"]
-      + ":</span> 	<span class='align-r'>" +posts["data"][message]["content"] + "</span> </div>";
-  }
+
 
 }
 
@@ -308,10 +378,38 @@ postMessage = function(form, mywall = true){
   }
   else {
     recipient = currentBrowsingEmail;
+
   }
   var message = form.contents.value;
-  serverstub.postMessage(token, message, recipient);
-  form.contents.value = "";
+  //serverstub.postMessage(token, message, recipient);
+
+  var request = {"token" : token, "email" : recipient, "message" : message}
+  //  var user_data = serverstub.getUserDataByEmail(token, form.email.value);
+  
+  try{
+    var req = new XMLHttpRequest();
+    req.open("POST", "/post_message", true);
+    req.setRequestHeader("Content-type", "application/json");
+    req.onreadystatechange = function(){
+      if (this.readyState == 4){
+
+        response = JSON.parse(req.responseText);
+
+        if (this.status == 200){
+          form.contents.value = "";
+
+        }else if (this.status == 400){
+          
+        }
+      }
+      
+    };
+    req.send(JSON.stringify(request));
+  }
+    catch(e){
+      window.alert(e);
+    console.error(e);
+  }
   return false;
 }
 
