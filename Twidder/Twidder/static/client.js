@@ -215,23 +215,38 @@ signin=function(form){
       window.alert(e);
     console.error(e);
   }
-
-
   return false;
-
 };
 
 /*Called when browse button is pressed*/
 browseUser = function(form){
   var token = localStorage.getItem("token");
-  var user_data = serverstub.getUserDataByEmail(token, form.email.value);
+  var request = {"token" : token, "email" : form.email.value.trim()}
+  //  var user_data = serverstub.getUserDataByEmail(token, form.email.value);
+  try{
 
-  if(user_data["success"]){
-    displayAccountInfo(form.email.value);
-    displayAccountMessages(form.email.value);
-  } else {
-    document.getElementById("browse_user_message").innerHTML = user_data["message"];
+    var req = new XMLHttpRequest();
+    req.open("GET", "/get_user_data_by_email", true);
+    req.setRequestHeader("Content-type", "application/json");
+    req.onreadystatechange = function(){
+      if (this.readyState == 4){
+        if (this.status == 200){
+          displayAccountInfo(form.email.value);
+          displayAccountMessages(form.email.value);
+        }else if (this.status == 400){
+          document.getElementById("browse_user_message").innerHTML = user_data["message"];
+          
+        }
+      }
+      
+    };
+    req.send(JSON.stringify(request));
   }
+    catch(e){
+      window.alert(e);
+    console.error(e);
+  }
+  
   return false;
 }
 

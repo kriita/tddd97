@@ -84,6 +84,7 @@ def get_user_data_by_token():
 
 @app.route('/get_user_data_by_email', methods = ['GET'])
 def get_user_data_by_email():
+    print(request.get_json())
     data = request.get_json()
     if database_helper.check_if_user_logged_in_token(data['token']):
         result = database_helper.get_user_data_by_email(data['token'], data['email'])
