@@ -17,8 +17,8 @@ window.onload=function(){
 
   if(token){ // if user is logged in
      displayView(document.getElementById('profileView')); // load profile
-     displayAccountInfo();
-     displayAccountMessages();
+     //displayAccountInfo();
+     //displayAccountMessages();
 
   }
   else{
@@ -226,13 +226,14 @@ browseUser = function(form){
   try{
 
     var req = new XMLHttpRequest();
-    req.open("GET", "/get_user_data_by_email", true);
+    req.open("GET", "/get_user_data_by_email?token=" + token + "&email=" + form.email.value, true);
     req.setRequestHeader("Content-type", "application/json");
     req.onreadystatechange = function(){
       if (this.readyState == 4){
         if (this.status == 200){
-          displayAccountInfo(form.email.value);
-          displayAccountMessages(form.email.value);
+          response = JSON.parse(req.responseText);
+          displayAccountInfo(response["data"], true);
+          //displayAccountMessages(form.email.value);
         }else if (this.status == 400){
           document.getElementById("browse_user_message").innerHTML = user_data["message"];
           
@@ -240,7 +241,7 @@ browseUser = function(form){
       }
       
     };
-    req.send(JSON.stringify(request));
+    req.send(null);
   }
     catch(e){
       window.alert(e);
@@ -272,28 +273,29 @@ displayAccountMessages = function(email = null){
 
 }
 
-displayAccountInfo = function(email = null) {
+displayAccountInfo = function(data, browse) {
   var token = localStorage.getItem("token");
   var user;
   var personalInfo;
-
-  if(!email){
-    user = serverstub.getUserDataByToken(token);
+  if(!browse){
+    //user = serverstub.getUserDataByToken(token);
+  
     personalInfo = document.getElementById("personalInfo");
   }
   else {
-    user = serverstub.getUserDataByEmail(token,email);
+    //user = serverstub.getUserDataByEmail(token,email);
     personalInfo = document.getElementById("personalInfoForUser");
-    currentBrowsingEmail = email;
+
+    currentBrowsingEmail = data["email"];
 
   }
+
   personalInfo.innerHTML = "";
-  for(info in user["data"]){
+
+  for(info in data){
     personalInfo.innerHTML += "<div> <span>" + info
-      + ":</span> 	<span class='align-r'>" +user["data"][info] + "</span> </div>";
+      + ":</span> 	<span class='align-r'>" +data[info] + "</span> </div>";
   }
-
-
 }
 
 
