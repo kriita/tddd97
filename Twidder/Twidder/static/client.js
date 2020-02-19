@@ -17,15 +17,41 @@ window.onload=function(){
 
   if(token){ // if user is logged in
      displayView(document.getElementById('profileView')); // load profile
-     //displayAccountInfo();
      displayAccountMessages();
-
+     displayUserInfoOnLoad();
   }
   else{
     displayView(document.getElementById('welcomeview'));
   }
 
 };
+
+displayUserInfoOnLoad=function(){
+  var token = localStorage.getItem("token");
+
+  try{
+
+    var req = new XMLHttpRequest();
+    req.open("GET", "/get_user_data_by_token?token=" + token, true);
+    req.setRequestHeader("Content-type", "application/json");
+    req.onreadystatechange = function(){
+      if (this.readyState == 4){
+        if (this.status == 200){
+          response = JSON.parse(req.responseText);
+          displayAccountInfo(response["data"], false);
+        }else if (this.status == 400){
+                    
+        }
+      }
+      
+    };
+    req.send(null);
+  }
+    catch(e){
+      window.alert(e);
+    console.error(e);
+  }
+}
 
 
 /*Called when input is given on signup */
@@ -253,7 +279,7 @@ browseUser = function(form){
         if (this.status == 200){
           response = JSON.parse(req.responseText);
           displayAccountInfo(response["data"], true);
-          //displayAccountMessages(form.email.value);
+          displayAccountMessages(response["data"]["email"]);
         }else if (this.status == 400){
           document.getElementById("browse_user_message").innerHTML = user_data["message"];
           
@@ -289,7 +315,6 @@ displayAccountMessages = function(email = null){
 
           if (this.status == 200){
             response = JSON.parse(req.responseText);
-
             wall.innerHTML = "";
             messages = response["data"]["messages"];
             for(var message in messages){
@@ -322,9 +347,10 @@ displayAccountMessages = function(email = null){
           if (this.status == 200){
             response = JSON.parse(req.responseText);
             wall.innerHTML = "";
-            for(message in response["messages"]){
-              wall.innerHTML += "<div> <span>" + response[message]["writer"]
-                + ":</span>   <span class='align-r'>" +response["data"][message]["content"] + "</span> </div>";
+            messages = response["data"]["messages"];
+            for(var message in messages){
+              wall.innerHTML += "<div> <span>" + messages[message][0]
+                + ":</span>   <span class='align-r'>" + messages[message][1] + "</span> </div>";
             }
 
           }else if (this.status == 400){
@@ -339,8 +365,6 @@ displayAccountMessages = function(email = null){
     }
     //posts = serverstub.getUserMessagesByEmail(token,email);
   }
-
-
 }
 
 displayAccountInfo = function(data, browse) {
@@ -368,13 +392,40 @@ displayAccountInfo = function(data, browse) {
   }
 }
 
+postMessageOnMyWall = function(form){
+  var token = localStorage.getItem("token");
 
-postMessage = function(form, mywall = true){
+  try{
+
+    var req = new XMLHttpRequest();
+    req.open("GET", "/get_user_data_by_token?token=" + token, true);
+    req.setRequestHeader("Content-type", "application/json");
+    req.onreadystatechange = function(){
+      if (this.readyState == 4){
+        if (this.status == 200){
+          response = JSON.parse(req.responseText);
+          postMessage(form, response["data"]["email"]);
+        }else if (this.status == 400){
+                    
+        }
+      }
+      
+    };
+    req.send(null);
+  }
+    catch(e){
+      window.alert(e);
+    console.error(e);
+  }
+  return false;
+}
+
+postMessage = function(form, email = null){
   var token = localStorage.getItem("token");
   var recipient;
-  if(mywall){
-    var user = serverstub.getUserDataByToken(token);
-    recipient = user["data"]["email"];
+  if(email != null){
+    //var user = serverstub.getUserDataByToken(token);
+    recipient = email;
   }
   else {
     recipient = currentBrowsingEmail;
@@ -391,10 +442,9 @@ postMessage = function(form, mywall = true){
     req.open("POST", "/post_message", true);
     req.setRequestHeader("Content-type", "application/json");
     req.onreadystatechange = function(){
+
       if (this.readyState == 4){
-
         response = JSON.parse(req.responseText);
-
         if (this.status == 200){
           form.contents.value = "";
 

@@ -72,10 +72,11 @@ def change_password():
 
 
 @app.route('/get_user_data_by_token', methods = ['GET'])
-def get_user_data_by_token():
-    data = request.get_json()
-    if database_helper.check_if_user_logged_in_token(data['token']):
-        result = database_helper.get_user_data_by_token(data['token'])
+def get_user_data_by_token(token = None):
+    token = request.args.get("token")
+
+    if database_helper.check_if_user_logged_in_token(token):
+        result = database_helper.get_user_data_by_token(token)
         return json.dumps({"success" : True, "message" : "User data received!", "data" : result}), 200
     else:
         return json.dumps({"success" : False, "message" : "Invalid token!", "data" : {}}), 400

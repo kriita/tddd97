@@ -138,7 +138,7 @@
 						<div class="subtitle">
 							New post:
 						</div>
-						<form onsubmit="return postMessage(this);">
+						<form onsubmit="return postMessageOnMyWall(this);">
 							<label>Content:</label>
 							<input required class="align-r" type="text" name="contents">
 							<button class="align-r">Submit</button>
@@ -166,7 +166,7 @@
 					<div id="browsePage">
 						<div class="subtitle">Personal information:</div>
 						<div class="browseInfo" id="personalInfoForUser"></div>
-						<form onsubmit="return postMessage(this, false);">
+						<form onsubmit="return postMessage(this);">
 							<label>Content:</label>
 							<input required class="align-r" type="text" name="contents">
 							<button class="align-r">Submit</button>
