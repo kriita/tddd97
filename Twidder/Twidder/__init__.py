@@ -1,8 +1,12 @@
 from flask import Flask, request, jsonify, send_from_directory
-import json;
+from flask_sockets import Sockets
+from gevent.pywsgi import WSGIServer;
+from geventwebsocket.handler import WebSocketHandler
+import json
 import database_helper
 
 app = Flask(__name__)
+sockets = Sockets(app)
 
 app.debug = True
 
@@ -127,3 +131,32 @@ def post_message():
             return json.dumps({"success" : False, "message" : "Target email invalid!", "data" : {}}), 400
     else:
         return json.dumps({"success" : False, "message" : "Invalid token!", "data" : {}}), 400
+
+@sockets.route("/ws")
+def connect_to_socket(ws):
+    remote_token = ""
+    socket = ws
+    while not ws.closed:
+
+        ws.send("signin")
+        remote_token = ws.receive()
+
+        if len(msgs_to_send) > 0:
+            for msg in msgs_to_send:
+                if(msg[0] == remote_token):
+                    ws.send(msg[1])
+                    msgs_to_send.remove(msg)
+                    ws.close()
+
+@app.route('/api')
+def api():
+    if request.environ.get('wsgi.websocket'):
+        ws = request.environ['wsgi.websocket']
+        while True:
+            message = ws.receive()
+            ws.send(message)
+    return
+
+if (__name__ == "__main__"):
+    http_server = WSGIServer(('', 5000), app, handler_class=WebSocketHandler)
+    http_server.serve_forever()

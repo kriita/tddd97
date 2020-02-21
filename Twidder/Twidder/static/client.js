@@ -487,3 +487,18 @@ select=function (tab) {
   tab.style.backgroundColor = "grey";
 
 }
+
+(document).ready(function(){
+  ('form').submit(function(event){
+    ws.send(('#data').val())
+    return false;
+  });
+  if ("WebSocket" in window) {
+    ws = new WebSocket("ws://" + document.domain + ":5000/api");
+    ws.onmessage = function (msg) {
+      ("#log").append("<p>" + msg.data + "</p>")
+    };
+  } else {
+    alert("WebSocket not supported");
+  }
+});
