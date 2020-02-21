@@ -2,7 +2,7 @@ import sqlite3
 import uuid
 from flask import g
 
-DATABASE_URI = 'Twidder/database.db'
+DATABASE_URI = 'database.db'
 
 
 def get_db():

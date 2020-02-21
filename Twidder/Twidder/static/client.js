@@ -28,7 +28,6 @@ window.onload=function(){
 
 displayUserInfoOnLoad=function(){
   var token = localStorage.getItem("token");
-
   try{
 
     var req = new XMLHttpRequest();

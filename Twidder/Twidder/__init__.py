@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, send_from_directory
 import json;
-import Twidder.database_helper
+import database_helper
 
 app = Flask(__name__)
 
@@ -127,8 +127,3 @@ def post_message():
             return json.dumps({"success" : False, "message" : "Target email invalid!", "data" : {}}), 400
     else:
         return json.dumps({"success" : False, "message" : "Invalid token!", "data" : {}}), 400
-
-
-
-if __name__ == '__main__':
-    app.run()
