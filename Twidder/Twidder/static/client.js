@@ -157,7 +157,6 @@ signout = function() {
         }else if (this.status == 400){
 
           response = JSON.parse(req.responseText)
-          var response = JSON.parse(req.responseText);
         } else if (this.status == 400){
           var response = JSON.parse(req.responseText)
         }
@@ -245,7 +244,7 @@ signin=function(form){
           displayView(document.getElementById('profileView'));
           displayUserInfoOnLoad();
           displayAccountMessages();
-          console.log(response);
+          socketConnection();
         }else if (this.status == 400){
           response = JSON.parse(req.responseText)
           var errorMessage = document.getElementById('errorLabel');
@@ -488,17 +487,32 @@ select=function (tab) {
 
 }
 
-(document).ready(function(){
-  ('form').submit(function(event){
-    ws.send(('#data').val())
-    return false;
-  });
-  if ("WebSocket" in window) {
-    ws = new WebSocket("ws://" + document.domain + ":5000/api");
-    ws.onmessage = function (msg) {
-      ("#log").append("<p>" + msg.data + "</p>")
-    };
-  } else {
-    alert("WebSocket not supported");
+socketConnection=function(){
+  var socket = new WebSocket("ws://localhost:5000/websocket");
+
+  socket.onmessage = function (socket_event){
+    var event_data = socket_event.data;
+
+    if(event_data == "token_req"){
+      socket.send(localStorage.getItem("token"));
+    }
+
+    if(event_data == "logout_req"){
+      window.alert("LOG OUT")
+      localStorage.removeItem("token");
+      displayView(document.getElementById('welcomeview'));
+      current_tab = "home";
+
+    }
+  };
+
+  socket.onopen = function(){
+    socket.send(localStorage.getItem("token"));
+  };
+
+  socket.onclose = function(){
+  //Do smth?
   }
-});
+
+
+}

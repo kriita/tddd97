@@ -8,6 +8,8 @@ import database_helper
 app = Flask(__name__)
 sockets = Sockets(app)
 
+current_socket = None;
+firstConect = True;
 app.debug = True
 
 @app.teardown_request
@@ -132,30 +134,30 @@ def post_message():
     else:
         return json.dumps({"success" : False, "message" : "Invalid token!", "data" : {}}), 400
 
-@sockets.route("/ws")
-def connect_to_socket(ws):
-    remote_token = ""
-    socket = ws
-    while not ws.closed:
-
-        ws.send("signin")
-        remote_token = ws.receive()
-
-        if len(msgs_to_send) > 0:
-            for msg in msgs_to_send:
-                if(msg[0] == remote_token):
-                    ws.send(msg[1])
-                    msgs_to_send.remove(msg)
-                    ws.close()
-
-@app.route('/api')
-def api():
-    if request.environ.get('wsgi.websocket'):
-        ws = request.environ['wsgi.websocket']
+@app.route("/websocket")
+def connect_to_socket():
+    if(firstConect == False):
+        current_socket.send("logout_req");
+        message = current_socket.receive()
+        print(message)
+        current_socket.close();
+    if(request.environ.get("wsgi.websocket")):
+        ws = request.environ["wsgi.websocket"]
+        current_socket = ws;
         while True:
+            ws.send("token_req")
             message = ws.receive()
-            ws.send(message)
+            
     return
+
+    # if(socket != None):
+    #     socket.send("logout_req")
+    #     socket.close();
+    
+    # socket = ws
+
+    # ws.send("token_req")
+    # client_token = ws.receive()
 
 if (__name__ == "__main__"):
     http_server = WSGIServer(('', 5000), app, handler_class=WebSocketHandler)
