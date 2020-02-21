@@ -37,10 +37,10 @@ displayUserInfoOnLoad=function(){
     req.onreadystatechange = function(){
       if (this.readyState == 4){
         if (this.status == 200){
+
           response = JSON.parse(req.responseText);
           displayAccountInfo(response["data"], false);
         }else if (this.status == 400){
-                    
         }
       }
       
@@ -244,7 +244,7 @@ signin=function(form){
           var token = response["data"]["token"]
           localStorage.setItem("token", token);
           displayView(document.getElementById('profileView'));
-          displayAccountInfo();
+          displayUserInfoOnLoad();
           displayAccountMessages();
           console.log(response);
         }else if (this.status == 400){
