@@ -244,14 +244,13 @@ signin=function(form){
           displayView(document.getElementById('profileView'));
           displayUserInfoOnLoad();
           displayAccountMessages();
-          socketConnection();
+          socketConnection(email);
         }else if (this.status == 400){
           response = JSON.parse(req.responseText)
           var errorMessage = document.getElementById('errorLabel');
           errorMessage.innerHTML = response["message"];
         }
       }
-      
     };
     req.send(JSON.stringify(request));
   }
@@ -487,7 +486,7 @@ select=function (tab) {
 
 }
 
-socketConnection=function(){
+socketConnection=function(email){
   var socket = new WebSocket("ws://localhost:5000/websocket");
 
   socket.onmessage = function (socket_event){
@@ -498,7 +497,6 @@ socketConnection=function(){
     }
 
     if(event_data == "logout_req"){
-      window.alert("LOG OUT")
       localStorage.removeItem("token");
       displayView(document.getElementById('welcomeview'));
       current_tab = "home";

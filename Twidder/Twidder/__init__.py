@@ -9,8 +9,9 @@ app = Flask(__name__)
 sockets = Sockets(app)
 
 current_socket = None;
-firstConect = True;
 app.debug = True
+
+msg = [];
 
 @app.teardown_request
 def after_request(exception):
@@ -25,8 +26,8 @@ def signin():
     data = request.get_json()
     if not database_helper.check_if_user_in_database(data['email']):
         return json.dumps({"success" : False, "message" : "User doesn't exist!", "data" : {}}), 400
-    if database_helper.check_if_user_logged_in(data['email']):
-        return json.dumps({"success" : False, "message" : "User already logged in!", "data" : {}}), 400
+    #if database_helper.check_if_user_logged_in(data['email']):
+    #    return json.dumps({"success" : False, "message" : "User already logged in!", "data" : {}}), 400
     result = database_helper.sign_in(data['email'], data['password'])
     if not result:
         return json.dumps({"success" : False, "message" : "Wrong password!", "data" : {}}), 400
@@ -135,20 +136,44 @@ def post_message():
         return json.dumps({"success" : False, "message" : "Invalid token!", "data" : {}}), 400
 
 @app.route("/websocket")
-def connect_to_socket():
-    if(firstConect == False):
-        current_socket.send("logout_req");
-        message = current_socket.receive()
-        print(message)
-        current_socket.close();
+def connect_to_socket(email = None):
     if(request.environ.get("wsgi.websocket")):
         ws = request.environ["wsgi.websocket"]
-        current_socket = ws;
-        while True:
+        global msg;
+        ws.send("token_req")
+        token = ws.receive()
+        data = database_helper.get_user_data_by_token(token)
+        if (database_helper.check_if_user_logged_in(data["email"]) > 1):
+            print(data)
+            new_msg = [data["email"], token]
+            msg += [new_msg]
+        print(msg)
+
+        # if(database_helper.check_if_user_logged_in(email)):
+
+        #     logged_in_socket.send("logout_req") 
+        #     current_socket.send("logout_req")
+        #     message = current_socket.receive()
+        #     current_socket.send("token_req")
+        #     message = ws.receive()
+        #     result = database_helper.sign_out(message)
+        #     current_socket.close();
+        # current_socket = ws;
+        ws_open = True;
+        while ws_open:
             ws.send("token_req")
-            message = ws.receive()
-            
-    return
+            token = ws.receive()
+            data = database_helper.get_user_data_by_token(token)
+            for mess in msg:
+                if(mess[0] == data["email"] and mess[1] != token):
+                    result = database_helper.sign_out(token)
+                    ws.send("logout_req")
+                    message = ws.receive()
+                    print(message)
+                    ws.close()
+                    ws_open = False;
+
+
 
     # if(socket != None):
     #     socket.send("logout_req")

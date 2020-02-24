@@ -32,7 +32,7 @@ def check_if_user_logged_in(email):
     cursor = get_db().execute("select * from logged_in where email like ?", [email])
     messages = cursor.fetchall()
     cursor.close()
-    return len(messages) != 0
+    return len(messages)
 
 def generate_token(email, password):
     return str(uuid.uuid4())
