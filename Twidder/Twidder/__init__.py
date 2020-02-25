@@ -173,6 +173,7 @@ def connect_to_socket(email = None):
                     print(message)
                     ws.close()
                     ws_open = False;
+        return json.dumps({"success" : False, "message" : "User logged in elsewhere!", "data" : {}}), 400
 
 
 
