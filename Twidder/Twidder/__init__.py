@@ -166,6 +166,7 @@ def connect_to_socket(email = None):
             data = database_helper.get_user_data_by_token(token)
             for mess in msg:
                 if(mess[0] == data["email"] and mess[1] != token):
+                    msg.remove(mess)
                     result = database_helper.sign_out(token)
                     ws.send("logout_req")
                     message = ws.receive()
