@@ -70,7 +70,6 @@ def check_if_user_in_database(email):
     
 def sign_out(token):
     cursor = get_db().cursor()
-    print("hej")
     cursor.execute("delete from logged_in where token like '"+ token + "';")
     cursor.close()
     return True

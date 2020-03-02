@@ -39,10 +39,7 @@ def signin():
 @app.route('/signup', methods = ['PUT'])
 def signup():
     data = request.get_json()
-    print("user_data")
     user_data = database_helper.check_if_user_in_database(data['email'])
-    print("USER : ")
-    print(user_data)
     if user_data:
         return json.dumps({"success" : False, "message" : "User already exists!", "data" : {}}), 400
 
@@ -120,7 +117,6 @@ def get_user_messages_by_token(token = None):
 
 @app.route('/get_user_messages_by_email', methods = ['GET'])
 def get_user_messages_by_email(token = None, email=None):
-
     token = request.args.get("token")
     email = request.args.get("email")
     if database_helper.check_if_user_logged_in(email):
@@ -145,33 +141,17 @@ def post_message():
 @app.route("/websocket")
 def connect_to_socket(email = None):
     if(request.environ.get("wsgi.websocket")):
-        print("\n \n REQUEST WEB SOCKET\n\n\n")
         ws = request.environ["wsgi.websocket"]
         global msg;
         ws.send("token_req")
         token = ws.receive()
-        print("\n \n TOKEN:       " + token + "\n\n\n")
-
         data = database_helper.get_user_data_by_token(token)
         if (database_helper.check_if_user_logged_in(data["email"]) > 1):
-            print(data)
             new_msg = [data["email"], token]
             msg += [new_msg]
-        print(msg)
 
-        # if(database_helper.check_if_user_logged_in(email)):
-
-        #     logged_in_socket.send("logout_req") 
-        #     current_socket.send("logout_req")
-        #     message = current_socket.receive()
-        #     current_socket.send("token_req")
-        #     message = ws.receive()
-        #     result = database_helper.sign_out(message)
-        #     current_socket.close();
-        # current_socket = ws;
         ws_open = True;
         while ws_open:
-            print("OPEN")
             ws.send("token_req")
             token = ws.receive()
             data = database_helper.get_user_data_by_token(token)
@@ -181,7 +161,6 @@ def connect_to_socket(email = None):
                     result = database_helper.sign_out(token)
                     ws.send("logout_req")
                     message = ws.receive()
-                    print(message)
                     ws.close()
                     ws_open = False;
         return json.dumps({"success" : False, "message" : "User logged in elsewhere!", "data" : {}}), 400
