@@ -40,6 +40,7 @@ form{
 /* Login box */
 .login{
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   margin-bottom: 10px;
   overflow: auto;
@@ -54,6 +55,10 @@ form{
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+#resetpwd{
+  float: right;
 }
 
 /* Signin box */
@@ -79,6 +84,40 @@ form{
 .centered{
   text-align: center;
 }
+
+/* Forgot password box */
+
+.forgotPassword{
+    margin: auto;
+    margin-top: 100px;
+    width: 600px;
+    height: 400px;
+}
+
+.forgotPwdBox{
+  flex-grow: 1;
+  justify-content: space-between;
+  padding: 6px;
+  max-width: 100%;
+
+  float: right;
+  display: flex;
+  width: 238px;
+  height: 388px;
+  flex-direction: column;
+  background-color: white;
+}
+
+.forgotPwdBox form{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.forgotPwdBox div{
+  margin:4px;
+}
+
 
 /* Form formatting */
 

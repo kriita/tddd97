@@ -23,8 +23,11 @@ window.onload=function(){
   else{
     displayView(document.getElementById('welcomeview'));
   }
-
 };
+
+forgotPasswordView=function(){
+	displayView(document.getElementById('forgotPasswordView'));
+}
 
 displayUserInfoOnLoad=function(){
   var token = localStorage.getItem("token");
@@ -72,6 +75,39 @@ validatePassword=function(){
   }
 }
 
+forgotPassword=function(form){
+	var email = form.email.value.trim();
+
+	try{
+	    var req = new XMLHttpRequest();
+	    req.open("GET", "/forgot_password", true);
+	    req.setRequestHeader("Content-type", "application/json");
+	    req.onreadystatechange = function(){
+	      if (this.readyState == 4){
+	        var response = JSON.parse(req.responseText);
+	        var errorMessage = document.getElementById('reset_password_message');
+
+	        if (this.status == 200){
+	          errorMessage.style.color = "green";
+	          form.password.value = "";
+	          form.new_password.value = "";
+	          form.repeat_new_password.value = "";
+	        }else if (this.status == 400){
+	           errorMessage.style.color = "red";
+
+	      }
+
+	      errorMessage.innerHTML = response["message"];
+	    } 
+
+	    };
+	    req.send(JSON.stringify(request));
+	  }
+	  catch(e){
+	    window.alert(e);
+	  console.error(e);
+	  }
+}
 
 resetPassword=function(form){
   var new_password = form.new_password.value.trim();
@@ -115,8 +151,6 @@ resetPassword=function(form){
   console.error(e);
   }
 }
-
-
 
 
 /* Creates validity on password input when password is reset */
@@ -511,6 +545,4 @@ socketConnection=function(email){
   socket.onclose = function(){
   //Do smth?
   }
-
-
 }

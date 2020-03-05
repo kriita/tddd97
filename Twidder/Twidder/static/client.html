@@ -32,6 +32,9 @@
 							<button class="formElemMargin align-r">login</button>
 						</div>
 					</form>
+					<div>
+						<button onclick="return forgotPasswordView();" id="resetpwd">Forgot Password?</button>
+					</div>
 				</div>
 
 				<!-- Signup box -->
@@ -93,6 +96,29 @@
 
 					</form>
 				</div>
+			</div>
+		</div>
+	</script>
+	<script type="text/view" id="forgotPasswordView">
+		<div class="forgotPassword">
+			<div class="logo">
+				<img id="Imagelogo" src="static/res/t_logo.png" alt="NO FILE FOUND">
+			</div>
+
+			<div class="forgotPwdBox">
+				<h3 class="centered">Forgot password?</h3>
+				<div>
+					Enter your e-mail here and we will send you a new password.
+				</div>
+				<form onsubmit="return forgotPassword(this);">
+					<div>
+						<label class="inputText formElemMargin">E-mail:</label>
+						<input class="formElemMargin" required type="email" name="email" value="">
+					</div>
+					<div>
+						<button class="formElemMargin align-r">Send new password</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</script>
