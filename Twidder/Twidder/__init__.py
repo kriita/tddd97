@@ -74,12 +74,27 @@ def change_password():
     if database_helper.check_if_user_logged_in_token(data['token']):
         result = database_helper.change_password(data['token'], data['newPassword'], data['oldPassword'])
         if result:
-        	return json.dumps({"success" : True, "message" : "Changed password!", "data" : {}}), 200
+            return json.dumps({"success" : True, "message" : "Changed password!", "data" : {}}), 200
         else:
-        	return json.dumps({"success" : False, "message" : "Old password does not match!", "data" : {}}), 400
+            return json.dumps({"success" : False, "message" : "Old password does not match!", "data" : {}}), 400
     else:
         return json.dumps({"success" : False, "message" : "Invalid token!", "data" : {}}), 400
 
+
+@app.route('/forgot_password', methods = ['PUT'])
+def forgot_password():
+    data = request.get_json()
+
+    print(data)
+
+    if database_helper.check_if_user_in_database(data['email']):
+        result = database_helper.forgot_password(data['email'])
+        if result:
+            return json.dumps({"success" : True, "message" : "An email has beren sent to the specified adress with a new password!", "data" : {}}), 200
+        else:
+            return json.dumps({"success" : False, "message" : "Something went wrong!", "data" : {}}), 400
+    else:
+        return json.dumps({"success" : False, "message" : "No user exists with that email!", "data" : {}}), 400
 
 
 @app.route('/get_user_data_by_token', methods = ['GET'])

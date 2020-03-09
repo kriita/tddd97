@@ -30,7 +30,7 @@ forgotPasswordView=function(){
 }
 
 //Send request to server using XMLHttpRequest
-sendRequest=function(type, url, request_body, callBack){
+sendRequest=function(type, url, request_body, callBack){  
   try{
     var req = new XMLHttpRequest();
     req.open(type, url, true);
@@ -38,6 +38,7 @@ sendRequest=function(type, url, request_body, callBack){
     req.onreadystatechange = function(){
       if (this.readyState == 4){
         response = JSON.parse(req.responseText);
+
         callBack(response)
       }
     };
@@ -79,38 +80,22 @@ validatePassword=function(){
 }
 
 forgotPassword=function(form){
-	var email = form.email.value.trim();
+  var email = form.email.value.trim();
+  var request = {"email" : email}
+  
 
-	try{
-	    var req = new XMLHttpRequest();
-	    req.open("GET", "/forgot_password", true);
-	    req.setRequestHeader("Content-type", "application/json");
-	    req.onreadystatechange = function(){
-	      if (this.readyState == 4){
-	        var response = JSON.parse(req.responseText);
-	        var errorMessage = document.getElementById('reset_password_message');
+  sendRequest("PUT", "/forgot_password", request, forgotPassword_Callback);
+  
+  return false;
+};
 
-	        if (this.status == 200){
-	          errorMessage.style.color = "green";
-	          form.password.value = "";
-	          form.new_password.value = "";
-	          form.repeat_new_password.value = "";
-	        }else if (this.status == 400){
-	           errorMessage.style.color = "red";
+forgotPassword_Callback=function(response){
 
-	      }
-
-	      errorMessage.innerHTML = response["message"];
-	    } 
-
-	    };
-	    req.send(JSON.stringify(request));
-	  }
-	  catch(e){
-	    window.alert(e);
-	  console.error(e);
-	  }
+	var errorMessage = document.getElementById('reset_password_message');
+	
+	errorMessage.innerHTML = response["message"];
 }
+
 
 resetPassword=function(form){
   var new_password = form.new_password.value.trim();
@@ -207,7 +192,7 @@ signin_Callback=function(response){
     displayView(document.getElementById('profileView'));
     displayUserInfoOnLoad();
     displayAccountMessages();
-    socketConnection(email);  
+    socketConnection(email);
   }
   else{
     var errorMessage = document.getElementById('errorLabel');
@@ -225,7 +210,6 @@ browseUser = function(form){
 }
 
 browseUser_Callback=function(response){
-  window.alert("res: " + response["success"])
   if(response["success"]){
     displayAccountInfo(response["data"], true);
     displayAccountMessages(response["data"]["email"]);

@@ -3,6 +3,13 @@ import uuid
 from flask import g
 import os
 import psycopg2
+import random
+from string import ascii_lowercase
+
+""" Libraries for email """
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 ON_HEROKU = os.environ.get('ON_HEROKU')
 
@@ -100,6 +107,36 @@ def change_password(token,newPassword, oldPassword):
         return True;
     else:
         return False;
+
+def forgot_password(email):
+    newPassword = randomString()
+
+    supportemail = "twiddersuport1337@gmail.com"
+    supportpass = "Twiddersuport11111"
+
+
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = "New password:" + newPassword
+    msg['From'] = supportemail
+    msg['To'] = email
+
+    s = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+    s.ehlo()
+    s.login(supportemail, supportpass)
+
+    s.sendmail(supportemail, email, msg.as_string())
+    s.quit()
+
+    cursor = get_db().cursor()
+    cursor.execute("update user_data set password = '" + newPassword + "' where email like '" + email + "';")
+    get_db().commit()
+    cursor.close()
+    return True;
+
+def randomString(stringLength=10):
+    letters = ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(stringLength))
+
 
 def get_user_data_by_token(token):
     cursor = get_db().cursor()
