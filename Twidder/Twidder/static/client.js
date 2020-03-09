@@ -192,7 +192,7 @@ signin_Callback=function(response){
     displayView(document.getElementById('profileView'));
     displayUserInfoOnLoad();
     displayAccountMessages();
-    socketConnection(email);
+    socketConnection(response["data"]["email"]);
   }
   else{
     var errorMessage = document.getElementById('errorLabel');
@@ -363,7 +363,12 @@ select=function (tab) {
 }
 
 socketConnection=function(email){
-  var socket = new WebSocket("ws://localhost:5000/websocket");
+  if (window.location.protocol == "https:") {
+    var ws_scheme = "wss://";
+  } else {
+    var ws_scheme = "ws://"
+  };
+  var socket = new WebSocket(ws_scheme + location.host + "/websocket");
 
   socket.onmessage = function (socket_event){
     var event_data = socket_event.data;
