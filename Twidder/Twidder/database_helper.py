@@ -11,6 +11,9 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+""" Library for encryption """
+import hashlib
+
 ON_HEROKU = os.environ.get('ON_HEROKU')
 
 if ON_HEROKU:
@@ -18,6 +21,10 @@ if ON_HEROKU:
 else:         
     DATABASE_URI = 'database.db'
 
+def encrypt_string(hash_string):
+    sha_signature = \
+        hashlib.sha256(hash_string.encode()).hexdigest()
+    return sha_signature
 
 def get_db():
     db = getattr(g, 'db', None)
@@ -37,14 +44,14 @@ def disconnect_db():
 
 def sign_in(email, password):
     cursor = get_db().cursor()
-    cursor.execute("select * from user_data where email like '"+ email + "' and password like '" + password + "'")
-    rows = cursor.fetchall()        
+    cursor.execute("select * from user_data where email like '"+ email + "' and password like '" + encrypt_string(password) + "'")
+    rows = cursor.fetchall()
     cursor.close()
     if len(rows) == 0:
         return False
-    token = generate_token(email, password)
+    token = generate_token()
     cursor = get_db().cursor()
-    cursor.execute("insert into logged_in values('"+ email + "','" + token + "');")
+    cursor.execute("insert into logged_in values('"+ email + "','" + encrypt_string(token) + "');")
     get_db().commit()
     return token
 
@@ -55,11 +62,11 @@ def check_if_user_logged_in(email):
     cursor.close()
     return len(messages)
 
-def generate_token(email, password):
+def generate_token():
     return str(uuid.uuid4())
 
 def save_user(email, password, name, familyName, gender, city, country):
-    sql_new_query = "insert into user_data values('"+ email + "','" + password + "','" + name + "','" + familyName + "','" + gender + "','" + city + "','" + country + "');"
+    sql_new_query = "insert into user_data values('"+ email + "','" + encrypt_string(password) + "','" + name + "','" + familyName + "','" + gender + "','" + city + "','" + country + "');"
     get_db().cursor().execute(sql_new_query)
     get_db().commit()
     return True
@@ -77,20 +84,20 @@ def check_if_user_in_database(email):
     
 def sign_out(token):
     cursor = get_db().cursor()
-    cursor.execute("delete from logged_in where token like '"+ token + "';")
+    cursor.execute("delete from logged_in where token like '"+ encrypt_string(token) + "';")
     cursor.close()
     return True
 
 def check_if_user_logged_in_token(token):
     cursor = get_db().cursor()
-    cursor.execute("select * from logged_in where token like '"+ token + "';")
+    cursor.execute("select * from logged_in where token like '"+ encrypt_string(token) + "';")
     messages = cursor.fetchall()
     cursor.close()
     return len(messages) != 0
 
 def change_password(token,newPassword, oldPassword):
     cursor = get_db().cursor()
-    cursor.execute("select email from logged_in where token like '" + token + "';")
+    cursor.execute("select email from logged_in where token like '" + encrypt_string(token) + "';")
     email = cursor.fetchall()
     cursor.close()
 
@@ -99,9 +106,9 @@ def change_password(token,newPassword, oldPassword):
     password = cursor.fetchall()
     cursor.close()
 
-    if password[0][0] == oldPassword:
+    if password[0][0] == encrypt_string(oldPassword):
         cursor = get_db().cursor()
-        cursor.execute("update user_data set password = '" + newPassword + "' where email like '" + email[0][0] + "';")
+        cursor.execute("update user_data set password = '" + encrypt_string(newPassword) + "' where email like '" + email[0][0] + "';")
         get_db().commit()
         cursor.close()
         return True;
@@ -128,7 +135,7 @@ def forgot_password(email):
     s.quit()
 
     cursor = get_db().cursor()
-    cursor.execute("update user_data set password = '" + newPassword + "' where email like '" + email + "';")
+    cursor.execute("update user_data set password = '" + encrypt_string(newPassword) + "' where email like '" + email + "';")
     get_db().commit()
     cursor.close()
     return True;
@@ -140,7 +147,7 @@ def randomString(stringLength=10):
 
 def get_user_data_by_token(token):
     cursor = get_db().cursor()
-    cursor.execute("select * from logged_in where token like '" + token + "';")
+    cursor.execute("select * from logged_in where token like '" + encrypt_string(token) + "';")
     data = cursor.fetchall()
     cursor.close()
     if len(data) == 0:
@@ -160,7 +167,7 @@ def get_user_data_by_email(token, email):
 
 def get_user_messages_by_token(token):
     cursor = get_db().cursor()
-    cursor.execute("select * from logged_in where token like '" + token + "';")
+    cursor.execute("select * from logged_in where token like '" + encrypt_string(token) + "';")
     data = cursor.fetchall()
     cursor.close()
     return get_user_messages_by_email(token, data[0][0])
