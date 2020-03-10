@@ -77,6 +77,7 @@ def check_if_user_in_database(email):
     cursor.execute("select * from user_data where email like '"+ email + "';")
     message = cursor.fetchall()
     cursor.close()
+    
     if(len(message) == 0):
         return False
     else:
