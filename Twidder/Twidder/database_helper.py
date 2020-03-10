@@ -86,6 +86,7 @@ def check_if_user_in_database(email):
 def sign_out(token):
     cursor = get_db().cursor()
     cursor.execute("delete from logged_in where token like '"+ encrypt_string(token) + "';")
+    get_db().commit()
     cursor.close()
     return True
 

@@ -27,7 +27,7 @@ def after_request(exception):
 
 
 @app.route('/')
-""" Default site routes to signin page route """
+# Default site routes to signin page route #
 def index():
     return send_from_directory('static', 'client.html')
 
@@ -37,7 +37,7 @@ def index():
 
 @app.route('/signin', methods = ['PUT'])
 def signin():
-    """ Request route to sign in a user in the welcome interface """
+    # Request route to sign in a user in the welcome interface #
     data = request.get_json()
     
     if not database_helper.check_if_user_in_database(data['email']):
@@ -52,7 +52,7 @@ def signin():
 
 @app.route('/signup', methods = ['PUT'])
 def signup():
-    """ Request route to sign up a user in the welcome interface """
+    # Request route to sign up a user in the welcome interface #
     data = request.get_json()
     user_data = database_helper.check_if_user_in_database(data['email'])
 
@@ -72,7 +72,7 @@ def signup():
 
 @app.route('/sign_out', methods = ['POST'])
 def sign_out():
-    """ Request route to sign out a user from the webpage """
+    # Request route to sign out a user from the webpage #
     data = request.get_json()
 
     if not database_helper.check_if_user_logged_in_token(data['token']):
@@ -86,7 +86,7 @@ def sign_out():
 
 @app.route('/change_password', methods = ['PUT'])
 def change_password():
-    """ Request route to change a user's password when the user is logged in """
+    # Request route to change a user's password when the user is logged in #
     data = request.get_json()
 
     if database_helper.check_if_user_logged_in_token(data['token']):
@@ -102,7 +102,7 @@ def change_password():
 
 @app.route('/forgot_password', methods = ['PUT'])
 def forgot_password():
-    """ Request route to get send a new password to the user's email """
+    # Request route to get send a new password to the user's email #
     data = request.get_json()
 
     if database_helper.check_if_user_in_database(data['email']): # Check if valid user
@@ -117,7 +117,7 @@ def forgot_password():
 
 @app.route('/get_user_data_by_token', methods = ['GET'])
 def get_user_data_by_token(token = None):
-    """ Request route that returns the sender's data by using the token, used when looking up other users on the webpage. """
+    # Request route that returns the sender's data by using the token, used when looking up other users on the webpage. #
     token = request.args.get("token")
 
     if database_helper.check_if_user_logged_in_token(token):
@@ -130,7 +130,7 @@ def get_user_data_by_token(token = None):
 
 @app.route('/get_user_data_by_email', methods = ['GET'])
 def get_user_data_by_email(token = None, email = None):
-    """ Request route that returns the user data associated with the email of an account, used when looking up other users on the webpage. """
+    # Request route that returns the user data associated with the email of an account, used when looking up other users on the webpage. #
     token = request.args.get("token")
     email = request.args.get("email")
 
@@ -142,7 +142,7 @@ def get_user_data_by_email(token = None, email = None):
 
 @app.route('/get_user_messages_by_token', methods = ['GET'])
 def get_user_messages_by_token(token = None):
-    """ Request route that returns all messages sent to the sender in exchange for a token """
+    # Request route that returns all messages sent to the sender in exchange for a token #
     token = request.args.get("token")
 
     if database_helper.check_if_user_logged_in_token(token):
@@ -153,7 +153,7 @@ def get_user_messages_by_token(token = None):
 
 @app.route('/get_user_messages_by_email', methods = ['GET'])
 def get_user_messages_by_email(token = None, email=None):
-    """ Request route that returns all messages sent to the a certain email """
+    # Request route that returns all messages sent to the a certain email #
     token = request.args.get("token")
     email = request.args.get("email")
 
@@ -165,7 +165,7 @@ def get_user_messages_by_email(token = None, email=None):
 
 @app.route('/post_message', methods = ['POST'])
 def post_message():
-    """ Posts a message to a the wall of the target """
+    # Posts a message to a the wall of the target #
     data = request.get_json()
 
     if database_helper.check_if_user_logged_in_token(data['token']):
@@ -179,7 +179,7 @@ def post_message():
 
 @app.route("/websocket")
 def connect_to_socket(email = None):
-    """ Connects a user to a websocket """
+    # Connects a user to a websocket #
     if(request.environ.get("wsgi.websocket")):
         ws = request.environ["wsgi.websocket"]
         global msg
