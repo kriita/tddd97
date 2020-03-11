@@ -1,5 +1,8 @@
 var password = document.getElementById("password"), confirm_password = document.getElementById("confirm_password");
 var current_tab = "home";
+var email = "";
+
+window.alert(email);
 
 //saves the email of the one whos is browsed for access
 var currentBrowsingEmail = "";
@@ -14,6 +17,7 @@ displayView=function(view){
 window.onload=function(){
   //check if token exists
   var token = localStorage.getItem("token");
+  var obj = {"name" : "hello"};
 
   if(token){ // if user is logged in
      displayView(document.getElementById('profileView')); // load profile
@@ -31,6 +35,15 @@ forgotPasswordView=function(){
 
 //Send request to server using XMLHttpRequest
 sendRequest=function(type, url, request_body, callBack){  
+
+  if(request_body){
+  	request_body["HMAC"] = encryptJSON(request_body);
+  } else {
+  	request_body = {"HMAC" : encryptJSON("")};
+  }
+
+  request_body["API Key"]=email;
+  
   try{
     var req = new XMLHttpRequest();
     req.open(type, url, true);
@@ -46,9 +59,26 @@ sendRequest=function(type, url, request_body, callBack){
   }
   catch(e){
     window.alert(e);
-  console.error(e);
+    console.error(e);
   }
 }
+
+encryptJSON=function(object){
+	stringObj = JSON.stringify(object);
+	var token = localStorage.getItem("token");
+	var hmac = "";
+
+	if(token){
+		var shaObj = new jsSHA("SHA-256", "TEXT");
+	
+		shaObj.setHMACKey(token, "TEXT");
+		shaObj.update(stringObj);
+		hmac = shaObj.getHMAC("HEX");
+	}
+	
+	return hmac;
+}
+
 
 displayUserInfoOnLoad=function(){
   var token = localStorage.getItem("token");
@@ -179,6 +209,7 @@ signin=function(form){
   var email = form.email.value.trim();
   var password = form.password.value.trim();
   var request = {"email" : email, "password" : password}
+  window.email = email;
   
   sendRequest("PUT", "/signin", request, signin_Callback)
   
@@ -192,7 +223,7 @@ signin_Callback=function(response){
     displayView(document.getElementById('profileView'));
     displayUserInfoOnLoad();
     displayAccountMessages();
-    socketConnection(response["data"]["email"]);
+    socketConnection();
   }
   else{
     var errorMessage = document.getElementById('errorLabel');
@@ -362,7 +393,7 @@ select=function (tab) {
 
 }
 
-socketConnection=function(email){
+socketConnection=function(){
   if (window.location.protocol == "https:") {
     var ws_scheme = "wss://";
   } else {
@@ -378,7 +409,7 @@ socketConnection=function(email){
     }
 
     if(event_data == "logout_req"){
-      localStorage.removeItem("token");
+      localStorage.removeItem("token_reqen");
       displayView(document.getElementById('welcomeview'));
       current_tab = "home";
 
