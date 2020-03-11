@@ -89,7 +89,7 @@ def change_password():
     # Request route to change a user's password when the user is logged in #
     data = request.get_json()
 
-    if database_helper.check_if_user_logged_in_token(data['token']):
+    if database_helper.compare_hmac(data):
         result = database_helper.change_password(data['token'], data['newPassword'], data['oldPassword'])
         if result:
             return json.dumps({"success" : True, "message" : "Changed password!", "data" : {}}), 200
@@ -105,7 +105,7 @@ def forgot_password():
     # Request route to get send a new password to the user's email #
     data = request.get_json()
 
-    if database_helper.check_if_user_in_database(data['email']): # Check if valid user
+    if database_helper.compare_hmac(data): # Check if valid user
         result = database_helper.forgot_password(data['email'])
         if result:
             return json.dumps({"success" : True, "message" : "An email has beren sent to the specified adress with a new password!", "data" : {}}), 200
@@ -116,12 +116,12 @@ def forgot_password():
 
 
 @app.route('/get_user_data_by_token', methods = ['GET'])
-def get_user_data_by_token(token = None):
+def get_user_data_by_token(data = None):
     # Request route that returns the sender's data by using the token, used when looking up other users on the webpage. #
-    token = request.args.get("token")
-
-    if database_helper.check_if_user_logged_in_token(token):
-        result = database_helper.get_user_data_by_token(token)
+    data = request.args.get("data")
+    data_dic = json.loads(data)
+    if database_helper.compare_hmac(data_dic):
+        result = database_helper.get_user_data_by_email(data_dic["API Key"])
         return json.dumps({"success" : True, "message" : "User data received!", "data" : result}), 200
     else:
         return json.dumps({"success" : False, "message" : "Invalid token!", "data" : {}}), 400
@@ -141,12 +141,13 @@ def get_user_data_by_email(token = None, email = None):
         return json.dumps({"success" : False, "message" : "Invalid token!", "data" : {}}), 400
 
 @app.route('/get_user_messages_by_token', methods = ['GET'])
-def get_user_messages_by_token(token = None):
+def get_user_messages_by_token(data = None):
     # Request route that returns all messages sent to the sender in exchange for a token #
-    token = request.args.get("token")
-
-    if database_helper.check_if_user_logged_in_token(token):
-        result = database_helper.get_user_messages_by_token(token)
+    data = request.args.get("data")
+    data_dic = json.loads(data)
+    print(data)
+    if database_helper.compare_hmac(data_dic):
+        result = database_helper.get_user_messages_by_email(data_dic["API Key"])
         return json.dumps({"success" : True, "message" : "User messages received!", "data" : result}), 200
     else:
         return json.dumps({"success" : False, "message" : "Invalid token!", "data" : {}}), 400

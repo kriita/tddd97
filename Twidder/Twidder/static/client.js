@@ -2,8 +2,6 @@ var password = document.getElementById("password"), confirm_password = document.
 var current_tab = "home";
 var email = "";
 
-window.alert(email);
-
 //saves the email of the one whos is browsed for access
 var currentBrowsingEmail = "";
 
@@ -37,12 +35,15 @@ forgotPasswordView=function(){
 sendRequest=function(type, url, request_body, callBack){  
 
   if(request_body){
+    request_body["API Key"]=email;
   	request_body["HMAC"] = encryptJSON(request_body);
   } else {
   	request_body = {"HMAC" : encryptJSON("")};
+    request_body["API Key"]=email;
+    url += "?data=" + JSON.stringify(request_body);
+    request_body = null;
   }
 
-  request_body["API Key"]=email;
   
   try{
     var req = new XMLHttpRequest();
@@ -81,7 +82,7 @@ encryptJSON=function(object){
 
 
 displayUserInfoOnLoad=function(){
-  sendRequest("GET", "/get_user_data_by_token", null, displayUserInfoOnLoad_Callback)
+  sendRequest("GET", "/get_user_data_by_token" , null, displayUserInfoOnLoad_Callback)
 }
 
 displayUserInfoOnLoad_Callback = function(response){

@@ -5,6 +5,7 @@ import os
 import psycopg2
 import random
 from string import ascii_lowercase
+import json
 
 """ Libraries for email """
 import smtplib
@@ -12,7 +13,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 """ Library for encryption """
-import hashlib
+import hashlib, hmac
 
 ON_HEROKU = os.environ.get('ON_HEROKU')
 
@@ -21,10 +22,33 @@ if ON_HEROKU:
 else:         
     DATABASE_URI = 'database.db'
 
+def compare_hmac(body):
+    HMAC = body.pop("HMAC")
+    api_key = body.pop("API Key")
+    token = get_token_by_email(api_key)
+    print(token)
+    new_hash = hash256(body, token)
+    return HMAC == new_hash
+
+
+def hash256(body, token):
+    m = hmac.new(bytes(token, 'utf-8'), digestmod=hashlib.blake2s)
+    m.update(bytes(json.dumps(body), 'utf-8'))
+    return m.hexdigest()
+
+def get_token_by_email(email):
+    cursor = get_db().cursor()
+    cursor.execute("select token from logged_in where email like '" + email + "';")
+    token = cursor.fetchall()
+    cursor.close()
+    return token
+    
+
 def encrypt_string(hash_string):
     sha_signature = \
         hashlib.sha256(hash_string.encode()).hexdigest()
     return sha_signature
+
 
 def get_db():
     db = getattr(g, 'db', None)
