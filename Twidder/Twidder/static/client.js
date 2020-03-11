@@ -81,8 +81,7 @@ encryptJSON=function(object){
 
 
 displayUserInfoOnLoad=function(){
-  var token = localStorage.getItem("token");
-  sendRequest("GET", "/get_user_data_by_token?token=" + token, null, displayUserInfoOnLoad_Callback)
+  sendRequest("GET", "/get_user_data_by_token", null, displayUserInfoOnLoad_Callback)
 }
 
 displayUserInfoOnLoad_Callback = function(response){
@@ -135,8 +134,7 @@ resetPassword=function(form){
     errorMessage.innerHTML = "cannot use same password";
     return false;
   }
-  var token = localStorage.getItem("token");
-  var request = {"token" : token, "newPassword" : new_password, "oldPassword" : password}
+  var request = {"newPassword" : new_password, "oldPassword" : password}
   sendRequest("PUT", "/change_password", request, resetPassword_Callback)
   form.password.value = "";
   form.new_password.value = "";
@@ -170,9 +168,7 @@ validateNewPassword=function(){
 
 
 signout = function() {
-  var token = localStorage.getItem("token");
-  var request = {"token" : token};
-  sendRequest("POST", "/sign_out", request, signout_callback);
+  sendRequest("POST", "/sign_out", {}, signout_callback);
   return false
 }
 
@@ -233,9 +229,8 @@ signin_Callback=function(response){
 
 /*Called when browse button is pressed*/
 browseUser = function(form){
-  var token = localStorage.getItem("token");
-  var request = {"token" : token, "email" : form.email.value.trim()}
-  sendRequest("GET", "/get_user_data_by_email?token=" + token + "&email=" + form.email.value, null, browseUser_Callback);
+  var request = {"email" : form.email.value.trim()}
+  sendRequest("GET", "/get_user_data_by_email?email=" + form.email.value, null, browseUser_Callback);
   
   return false;
 }
@@ -252,16 +247,15 @@ browseUser_Callback=function(response){
 
 
 displayAccountMessages = function(email = null){
-  var token = localStorage.getItem("token");
   var posts;
   var wall;
 
   if(!email){
-    sendRequest("GET", "/get_user_messages_by_token?token=" + token, null ,displayAccountMessages_Mine_CallBack )
+    sendRequest("GET", "/get_user_messages_by_token", null ,displayAccountMessages_Mine_CallBack )
   }
   else
   {
-    sendRequest("GET", "/get_user_messages_by_email?token=" + token + "&email=" +  email, null, displayAccountMessages_Other_CallBack )
+    sendRequest("GET", "/get_user_messages_by_email?email=" +  email, null, displayAccountMessages_Other_CallBack )
   }
 }
 
@@ -294,7 +288,6 @@ displayAccountMessages_Other_CallBack=function(){
 }
 
 displayAccountInfo = function(data, browse) {
-  var token = localStorage.getItem("token");
   var user;
   var personalInfo;
   if(!browse){
@@ -317,11 +310,10 @@ displayAccountInfo = function(data, browse) {
 }
 
 postMessageOnMyWall = function(form){
-  var token = localStorage.getItem("token");
   try{
 
     var req = new XMLHttpRequest();
-    req.open("GET", "/get_user_data_by_token?token=" + token, true);
+    req.open("GET", "/get_user_data_by_token", true);
     req.setRequestHeader("Content-type", "application/json");
     req.onreadystatechange = function(){
       if (this.readyState == 4){
@@ -344,7 +336,6 @@ postMessageOnMyWall = function(form){
 }
 
 postMessage = function(form, email = null){
-  var token = localStorage.getItem("token");
   var recipient;
   if(email != null){
     recipient = email;
@@ -355,7 +346,7 @@ postMessage = function(form, email = null){
   }
   var message = form.contents.value;
 
-  var request = {"token" : token, "email" : recipient, "message" : message}
+  var request = {"email" : recipient, "message" : message}
   
   sendRequest("POST", "/post_message", request, postMessage_Callback);
   form.contents.value = "";
@@ -404,23 +395,11 @@ socketConnection=function(){
   socket.onmessage = function (socket_event){
     var event_data = socket_event.data;
 
-    if(event_data == "token_req"){
-      socket.send(localStorage.getItem("token"));
-    }
-
     if(event_data == "logout_req"){
-      localStorage.removeItem("token_reqen");
+      localStorage.removeItem("token");
       displayView(document.getElementById('welcomeview'));
       current_tab = "home";
 
-    }
+    };
   };
-
-  socket.onopen = function(){
-    socket.send(localStorage.getItem("token"));
-  };
-
-  socket.onclose = function(){
-  //Do smth?
-  }
 }
