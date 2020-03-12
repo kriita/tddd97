@@ -36,13 +36,11 @@ sendRequest=function(type, url, request_body, callBack){
 
   if(request_body){
     request_body["API Key"]=email;
-  	request_body["HMAC"] = encryptJSON(request_body);
   } else {
-  	request_body = {"HMAC" : encryptJSON("")};
-    request_body["API Key"]=email;
-    url += "?data=" + JSON.stringify(request_body);
-    request_body = null;
+  	request_body = {"API Key" : email};
   }
+  request_body["HMAC"] = encryptJSON(request_body);
+  url += "?data=" + JSON.stringify(request_body);
 
   
   try{
@@ -69,12 +67,15 @@ encryptJSON=function(object){
 	var token = localStorage.getItem("token");
 	var hmac = "";
 
+	window.alert(stringObj);
+
 	if(token){
 		var shaObj = new jsSHA("SHA-256", "TEXT");
 	
 		shaObj.setHMACKey(token, "TEXT");
 		shaObj.update(stringObj);
 		hmac = shaObj.getHMAC("HEX");
+		window.alert(hmac);
 	}
 	
 	return hmac;
@@ -391,15 +392,23 @@ socketConnection=function(){
   } else {
     var ws_scheme = "ws://"
   };
-  var socket = new WebSocket(ws_scheme + location.host + "/websocket");
+
+  url = "";
+  request_body = {"API Key" : email};
+  request_body["HMAC"] = encryptJSON(request_body);  
+  url += "?data=" + JSON.stringify(request_body);
+
+  var socket = new WebSocket(ws_scheme + location.host + "/websocket" + url);
 
   socket.onmessage = function (socket_event){
     var event_data = socket_event.data;
 
-    if(event_data == "logout_req"){
-      localStorage.removeItem("token");
-      displayView(document.getElementById('welcomeview'));
-      current_tab = "home";
+    if(event_data == "email_req"){
+    	socket.send(window.email);
+    } else if(event_data == "logout_req"){
+    	localStorage.removeItem("token");
+    	displayView(document.getElementById('welcomeview'));
+    	current_tab = "home";
 
     };
   };

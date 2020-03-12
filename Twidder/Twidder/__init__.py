@@ -73,11 +73,13 @@ def signup():
 @app.route('/sign_out', methods = ['POST'])
 def sign_out():
     # Request route to sign out a user from the webpage #
-    data = request.get_json()
+    raw_data = request.args.get("data")
+    data = json.loads(raw_data)
 
-    if not database_helper.check_if_user_logged_in_token(data['token']):
-        return json.dumps({"success" : False, "message" : "User not logged in!", "data" : {}}), 400        
-    result = database_helper.sign_out(data['token'])
+    if not database_helper.compare_hmac(data):
+        return json.dumps({"success" : False, "message" : "Invalid request!", "data" : {}}), 400
+    token = database_helper.get_token_by_email(data["API Key"])
+    result = database_helper.sign_out(token)
     return json.dumps({"success" : True, "message" : "Signed out!", "data" : {}}), 200
 
 
@@ -88,6 +90,7 @@ def sign_out():
 def change_password():
     # Request route to change a user's password when the user is logged in #
     data = request.get_json()
+    print(data)
 
     if database_helper.compare_hmac(data):
         result = database_helper.change_password(data['token'], data['newPassword'], data['oldPassword'])
@@ -120,6 +123,7 @@ def get_user_data_by_token(data = None):
     # Request route that returns the sender's data by using the token, used when looking up other users on the webpage. #
     data = request.args.get("data")
     data_dic = json.loads(data)
+
     if database_helper.compare_hmac(data_dic):
         result = database_helper.get_user_data_by_email(data_dic["API Key"])
         return json.dumps({"success" : True, "message" : "User data received!", "data" : result}), 200
@@ -145,7 +149,10 @@ def get_user_messages_by_token(data = None):
     # Request route that returns all messages sent to the sender in exchange for a token #
     data = request.args.get("data")
     data_dic = json.loads(data)
-    print(data)
+
+    print("HMAC: ")
+    print(data_dic["HMAC"])
+
     if database_helper.compare_hmac(data_dic):
         result = database_helper.get_user_messages_by_email(data_dic["API Key"])
         return json.dumps({"success" : True, "message" : "User messages received!", "data" : result}), 200
@@ -184,20 +191,19 @@ def connect_to_socket(email = None):
     if(request.environ.get("wsgi.websocket")):
         ws = request.environ["wsgi.websocket"]
         global msg
-        ws.send("token_req")
-        token = ws.receive()
-        data = database_helper.get_user_data_by_token(token)
-        if (database_helper.check_if_user_logged_in(data["email"]) > 1):
-            new_msg = [data["email"], token]
+        ws.send("email_req")
+        email = ws.receive()
+        if (database_helper.check_if_user_logged_in(email) > 1):
+            new_msg = [email, database_helper.get_token_by_email(email)]
             msg += [new_msg]
 
         ws_open = True
         while ws_open:
-            ws.send("token_req")
-            token = ws.receive()
-            data = database_helper.get_user_data_by_token(token)
+            ws.send("email_req")
+            email = ws.receive()
+            token = database_helper.get_token_by_email(email)
             for mess in msg:
-                if(mess[0] == data["email"] and mess[1] != token):
+                if(mess[0] == email and mess[1] != token):
                     msg.remove(mess)
                     result = database_helper.sign_out(token)
                     ws.send("logout_req")

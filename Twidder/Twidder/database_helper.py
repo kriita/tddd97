@@ -22,16 +22,25 @@ if ON_HEROKU:
 else:         
     DATABASE_URI = 'database.db'
 
-def compare_hmac(body):
+def compare_hmac(old_body):
+    body = old_body
     HMAC = body.pop("HMAC")
-    api_key = body.pop("API Key")
+    api_key = body["API Key"]
+    print("\n"+json.dumps(body))
     token = get_token_by_email(api_key)
-    print(token)
-    new_hash = hash256(body, token)
+
+    new_hash = hash256(body, token) if token else ""
+    
+    print("\n" + HMAC)
+    print("\n" + new_hash)
+
     return HMAC == new_hash
 
 
 def hash256(body, token):
+    signature = hmac.new(bytes(token, 'utf-8'), msg = bytes(json.dumps(body), 'utf-8'), digestmod = hashlib.sha256).hexdigest()
+    print("New hex: " + signature)
+
     m = hmac.new(bytes(token, 'utf-8'), digestmod=hashlib.blake2s)
     m.update(bytes(json.dumps(body), 'utf-8'))
     return m.hexdigest()
@@ -41,7 +50,7 @@ def get_token_by_email(email):
     cursor.execute("select token from logged_in where email like '" + email + "';")
     token = cursor.fetchall()
     cursor.close()
-    return token
+    return token[0][0]
     
 
 def encrypt_string(hash_string):
@@ -75,7 +84,7 @@ def sign_in(email, password):
         return False
     token = generate_token()
     cursor = get_db().cursor()
-    cursor.execute("insert into logged_in values('"+ email + "','" + encrypt_string(token) + "');")
+    cursor.execute("insert into logged_in values('"+ email + "','" + token + "');")
     get_db().commit()
     return token
 
@@ -109,21 +118,21 @@ def check_if_user_in_database(email):
     
 def sign_out(token):
     cursor = get_db().cursor()
-    cursor.execute("delete from logged_in where token like '"+ encrypt_string(token) + "';")
+    cursor.execute("delete from logged_in where token like '"+ token + "';")
     get_db().commit()
     cursor.close()
     return True
 
 def check_if_user_logged_in_token(token):
     cursor = get_db().cursor()
-    cursor.execute("select * from logged_in where token like '"+ encrypt_string(token) + "';")
+    cursor.execute("select * from logged_in where token like '"+ token + "';")
     messages = cursor.fetchall()
     cursor.close()
     return len(messages) != 0
 
 def change_password(token,newPassword, oldPassword):
     cursor = get_db().cursor()
-    cursor.execute("select email from logged_in where token like '" + encrypt_string(token) + "';")
+    cursor.execute("select email from logged_in where token like '" + token + "';")
     email = cursor.fetchall()
     cursor.close()
 
@@ -173,7 +182,7 @@ def randomString(stringLength=10):
 
 def get_user_data_by_token(token):
     cursor = get_db().cursor()
-    cursor.execute("select * from logged_in where token like '" + encrypt_string(token) + "';")
+    cursor.execute("select * from logged_in where token like '" + token + "';")
     data = cursor.fetchall()
     cursor.close()
     if len(data) == 0:
@@ -193,7 +202,7 @@ def get_user_data_by_email(token, email):
 
 def get_user_messages_by_token(token):
     cursor = get_db().cursor()
-    cursor.execute("select * from logged_in where token like '" + encrypt_string(token) + "';")
+    cursor.execute("select * from logged_in where token like '" + token + "';")
     data = cursor.fetchall()
     cursor.close()
     return get_user_messages_by_email(token, data[0][0])
