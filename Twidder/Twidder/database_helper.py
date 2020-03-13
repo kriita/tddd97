@@ -14,6 +14,7 @@ from email.mime.text import MIMEText
 
 """ Library for encryption """
 import hashlib, hmac
+import base64
 
 ON_HEROKU = os.environ.get('ON_HEROKU')
 
@@ -26,31 +27,31 @@ def compare_hmac(old_body):
     body = old_body
     HMAC = body.pop("HMAC")
     api_key = body["API Key"]
-    print("\n"+json.dumps(body))
     token = get_token_by_email(api_key)
 
-    new_hash = hash256(body, token) if token else ""
-    
-    print("\n" + HMAC)
-    print("\n" + new_hash)
+    new_hash = hash256(body, token, HMAC) if token else ""
 
     return HMAC == new_hash
 
 
-def hash256(body, token):
-    signature = hmac.new(bytes(token, 'utf-8'), msg = bytes(json.dumps(body), 'utf-8'), digestmod = hashlib.sha256).hexdigest()
-    print("New hex: " + signature)
-
-    m = hmac.new(bytes(token, 'utf-8'), digestmod=hashlib.blake2s)
-    m.update(bytes(json.dumps(body), 'utf-8'))
-    return m.hexdigest()
+def hash256(body, token, old_hmac):
+    bodymsg = json.dumps(body, separators=(',', ':'))
+    message = bytes(bodymsg, 'utf-8')
+    secret = bytes(token, 'utf-8')
+    signature = base64.b64encode(hmac.new(secret, message, digestmod=hashlib.sha256).digest())
+    if(old_hmac.count("+")):
+        return signature.decode("utf-8")
+    return signature.decode("utf-8").replace("+", " ")
 
 def get_token_by_email(email):
     cursor = get_db().cursor()
     cursor.execute("select token from logged_in where email like '" + email + "';")
     token = cursor.fetchall()
     cursor.close()
-    return token[0][0]
+    if(not token):
+        return token
+    else:
+        return token[0][0]
     
 
 def encrypt_string(hash_string):
@@ -130,20 +131,17 @@ def check_if_user_logged_in_token(token):
     cursor.close()
     return len(messages) != 0
 
-def change_password(token,newPassword, oldPassword):
-    cursor = get_db().cursor()
-    cursor.execute("select email from logged_in where token like '" + token + "';")
-    email = cursor.fetchall()
-    cursor.close()
+def change_password(email, newPassword, oldPassword):
+    
 
     cursor = get_db().cursor()
-    cursor.execute("select password from user_data where email like '" + email[0][0] + "';")
+    cursor.execute("select password from user_data where email like '" + email + "';")
     password = cursor.fetchall()
     cursor.close()
 
     if password[0][0] == encrypt_string(oldPassword):
         cursor = get_db().cursor()
-        cursor.execute("update user_data set password = '" + encrypt_string(newPassword) + "' where email like '" + email[0][0] + "';")
+        cursor.execute("update user_data set password = '" + encrypt_string(newPassword) + "' where email like '" + email + "';")
         get_db().commit()
         cursor.close()
         return True;
@@ -189,7 +187,7 @@ def get_user_data_by_token(token):
         return False
     return get_user_data_by_email(token,data[0][0])
 
-def get_user_data_by_email(token, email):
+def get_user_data_by_email(email):
     cursor = get_db().cursor()
     cursor.execute("select * from user_data where email like '" + email + "';")
     messages = cursor.fetchall()
@@ -207,18 +205,17 @@ def get_user_messages_by_token(token):
     cursor.close()
     return get_user_messages_by_email(token, data[0][0])
 
-def get_user_messages_by_email(token, email):
+def get_user_messages_by_email(email):
     cursor = get_db().cursor()
     cursor.execute("select * from messages where target like '" + email + "';")
     messages = cursor.fetchall()
     cursor.close()
     return {"messages" : messages}
 
-def post_message(token, message, target):
-    user_data = get_user_data_by_token(token)
-    if get_user_data_by_email(token, target):
+def post_message(email, message, target):
+    if get_user_data_by_email(target):
         cursor = get_db().cursor()
-        cursor.execute("insert into messages values('" + user_data['email'] + "','" + message + "','" + target + "');")
+        cursor.execute("insert into messages values('" + email+ "','" + message + "','" + target + "');")
         get_db().commit()
         cursor.close()
         return True

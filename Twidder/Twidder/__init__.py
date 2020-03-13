@@ -87,13 +87,13 @@ def sign_out():
 ### User modification functions ###
 
 @app.route('/change_password', methods = ['PUT'])
-def change_password():
+def change_password(data = None):
     # Request route to change a user's password when the user is logged in #
-    data = request.get_json()
-    print(data)
+    data = request.args.get("data")
+    data_dic = json.loads(data)
 
-    if database_helper.compare_hmac(data):
-        result = database_helper.change_password(data['token'], data['newPassword'], data['oldPassword'])
+    if database_helper.compare_hmac(data_dic):
+        result = database_helper.change_password(data_dic["API Key"], data_dic['newPassword'], data_dic['oldPassword'])
         if result:
             return json.dumps({"success" : True, "message" : "Changed password!", "data" : {}}), 200
         else:
@@ -104,12 +104,13 @@ def change_password():
 
 
 @app.route('/forgot_password', methods = ['PUT'])
-def forgot_password():
+def forgot_password(data = None):
     # Request route to get send a new password to the user's email #
-    data = request.get_json()
+    data = request.args.get("data")
+    data_dic = json.loads(data)
 
     if database_helper.compare_hmac(data): # Check if valid user
-        result = database_helper.forgot_password(data['email'])
+        result = database_helper.forgot_password(data_dic['API Key'])
         if result:
             return json.dumps({"success" : True, "message" : "An email has beren sent to the specified adress with a new password!", "data" : {}}), 200
         else:
@@ -133,13 +134,13 @@ def get_user_data_by_token(data = None):
 
 
 @app.route('/get_user_data_by_email', methods = ['GET'])
-def get_user_data_by_email(token = None, email = None):
+def get_user_data_by_email(data=None):
     # Request route that returns the user data associated with the email of an account, used when looking up other users on the webpage. #
-    token = request.args.get("token")
-    email = request.args.get("email")
+    data = request.args.get("data")
+    data_dic = json.loads(data)
 
-    if database_helper.check_if_user_logged_in_token(token):
-        result = database_helper.get_user_data_by_email(token, email)
+    if database_helper.compare_hmac(data_dic):
+        result = database_helper.get_user_data_by_email(data_dic["email"])
         return json.dumps({"success" : True, "message" : "User data received!", "data" : result}), 200
     else:
         return json.dumps({"success" : False, "message" : "Invalid token!", "data" : {}}), 400
@@ -150,9 +151,6 @@ def get_user_messages_by_token(data = None):
     data = request.args.get("data")
     data_dic = json.loads(data)
 
-    print("HMAC: ")
-    print(data_dic["HMAC"])
-
     if database_helper.compare_hmac(data_dic):
         result = database_helper.get_user_messages_by_email(data_dic["API Key"])
         return json.dumps({"success" : True, "message" : "User messages received!", "data" : result}), 200
@@ -160,13 +158,13 @@ def get_user_messages_by_token(data = None):
         return json.dumps({"success" : False, "message" : "Invalid token!", "data" : {}}), 400
 
 @app.route('/get_user_messages_by_email', methods = ['GET'])
-def get_user_messages_by_email(token = None, email=None):
+def get_user_messages_by_email(data=None):
     # Request route that returns all messages sent to the a certain email #
-    token = request.args.get("token")
-    email = request.args.get("email")
+    data = request.args.get("data")
+    data_dic = json.loads(data)
 
-    if database_helper.check_if_user_logged_in(email):
-        result = database_helper.get_user_messages_by_email(token, email)
+    if database_helper.compare_hmac(data_dic):
+        result = database_helper.get_user_messages_by_email(data_dic["email"])
         return json.dumps({"success" : True, "message" : "User messages received!", "data" : result}), 200
     else:
         return json.dumps({"success" : False, "message" : "Invalid token!", "data" : {}}), 400
@@ -174,10 +172,10 @@ def get_user_messages_by_email(token = None, email=None):
 @app.route('/post_message', methods = ['POST'])
 def post_message():
     # Posts a message to a the wall of the target #
-    data = request.get_json()
-
-    if database_helper.check_if_user_logged_in_token(data['token']):
-        result = database_helper.post_message(data['token'], data['message'], data['email'])
+    data = request.args.get("data")
+    data_dic = json.loads(data)
+    if database_helper.compare_hmac(data_dic):
+        result = database_helper.post_message(data_dic["API Key"], data_dic["message"], data_dic["email"])
         if result:
             return json.dumps({"success" : True, "message" : "Message posted!", "data" : {}}), 200
         else:
@@ -196,20 +194,26 @@ def connect_to_socket(email = None):
         if (database_helper.check_if_user_logged_in(email) > 1):
             new_msg = [email, database_helper.get_token_by_email(email)]
             msg += [new_msg]
+            print(new_msg)
 
         ws_open = True
         while ws_open:
             ws.send("email_req")
             email = ws.receive()
             token = database_helper.get_token_by_email(email)
-            for mess in msg:
-                if(mess[0] == email and mess[1] != token):
-                    msg.remove(mess)
-                    result = database_helper.sign_out(token)
-                    ws.send("logout_req")
-                    message = ws.receive()
-                    ws.close()
-                    ws_open = False
+            if(not token):
+                ws.close()
+                ws_open = False
+            else:
+                for mess in msg:
+                    print(mess[0]  + " " + email + " " + mess[1]+ " " + token)
+                    if(mess[0] == email and mess[1] != token):
+                        msg.remove(mess)
+                        result = database_helper.sign_out(token)
+                        ws.send("logout_req")
+                        message = ws.receive()
+                        ws.close()
+                        ws_open = False
         return json.dumps({"success" : False, "message" : "User logged in elsewhere!", "data" : {}}), 400
 
 

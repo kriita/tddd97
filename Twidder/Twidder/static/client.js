@@ -63,22 +63,16 @@ sendRequest=function(type, url, request_body, callBack){
 }
 
 encryptJSON=function(object){
-	stringObj = JSON.stringify(object);
-	var token = localStorage.getItem("token");
-	var hmac = "";
-
-	window.alert(stringObj);
-
-	if(token){
-		var shaObj = new jsSHA("SHA-256", "TEXT");
-	
-		shaObj.setHMACKey(token, "TEXT");
-		shaObj.update(stringObj);
-		hmac = shaObj.getHMAC("HEX");
-		window.alert(hmac);
-	}
-	
-	return hmac;
+	 
+   stringObj = JSON.stringify(object);
+   var token = localStorage.getItem("token");
+   var hashInBase64 = "";
+   if(token){
+    var hash = CryptoJS.HmacSHA256(stringObj, token);
+    hashInBase64 = CryptoJS.enc.Base64.stringify(hash);
+   }
+   
+   return hashInBase64;
 }
 
 
@@ -232,7 +226,7 @@ signin_Callback=function(response){
 /*Called when browse button is pressed*/
 browseUser = function(form){
   var request = {"email" : form.email.value.trim()}
-  sendRequest("GET", "/get_user_data_by_email?email=" + form.email.value, null, browseUser_Callback);
+  sendRequest("GET", "/get_user_data_by_email", request, browseUser_Callback);
   
   return false;
 }
@@ -257,7 +251,8 @@ displayAccountMessages = function(email = null){
   }
   else
   {
-    sendRequest("GET", "/get_user_messages_by_email?email=" +  email, null, displayAccountMessages_Other_CallBack )
+    var request = {"email": email}
+    sendRequest("GET", "/get_user_messages_by_email", request, displayAccountMessages_Other_CallBack )
   }
 }
 
@@ -312,28 +307,30 @@ displayAccountInfo = function(data, browse) {
 }
 
 postMessageOnMyWall = function(form){
-  try{
+  postMessage(form, email);
 
-    var req = new XMLHttpRequest();
-    req.open("GET", "/get_user_data_by_token", true);
-    req.setRequestHeader("Content-type", "application/json");
-    req.onreadystatechange = function(){
-      if (this.readyState == 4){
-        if (this.status == 200){
-          response = JSON.parse(req.responseText);
-          postMessage(form, response["data"]["email"]);
-        }else if (this.status == 400){
+  // try{
+
+  //   var req = new XMLHttpRequest();
+  //   req.open("GET", "/get_user_data_by_token", true);
+  //   req.setRequestHeader("Content-type", "application/json");
+  //   req.onreadystatechange = function(){
+  //     if (this.readyState == 4){
+  //       if (this.status == 200){
+  //         response = JSON.parse(req.responseText);
+  //         postMessage(form, response["data"]["email"]);
+  //       }else if (this.status == 400){
                     
-        }
-      }
+  //       }
+  //     }
       
-    };
-    req.send(null);
-  }
-    catch(e){
-      window.alert(e);
-    console.error(e);
-  }
+  //   };
+  //   req.send(null);
+  // }
+  //   catch(e){
+  //     window.alert(e);
+  //   console.error(e);
+  // }
   return false;
 }
 
