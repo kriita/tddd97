@@ -43,10 +43,10 @@ def signin():
     if not database_helper.check_if_user_in_database(data['email']):
         return json.dumps({"success" : False, "message" : "User doesn't exist!", "data" : {}}), 400
     result = database_helper.sign_in(data['email'], data['password'])
-    
+
     if not result:
         return json.dumps({"success" : False, "message" : "Wrong password!", "data" : {}}), 400
-    return json.dumps({"success" : True, "message" : "User logged in!", "data" : {"token" : result}}), 200
+    return json.dumps({"success" : True, "message" : "User logged in!", "data" : {"token" : result["token"], "salt" : result["salt"]}}), 200
 
 
 
@@ -75,11 +75,15 @@ def sign_out():
     # Request route to sign out a user from the webpage #
     raw_data = request.args.get("data")
     data = json.loads(raw_data)
+    print("KEY: " + data["API Key"])
 
     if not database_helper.compare_hmac(data):
+        print("Compare failed!")
         return json.dumps({"success" : False, "message" : "Invalid request!", "data" : {}}), 400
     token = database_helper.get_token_by_email(data["API Key"])
-    result = database_helper.sign_out(token)
+    salt = data["salt"]
+    print("Salt: " + salt)
+    result = database_helper.sign_out(token, salt)
     return json.dumps({"success" : True, "message" : "Signed out!", "data" : {}}), 200
 
 
@@ -125,7 +129,7 @@ def get_user_data_by_token(data = None):
     data = request.args.get("data")
     data_dic = json.loads(data)
 
-    if database_helper.compare_hmac(data_dic):
+    if not database_helper.compare_hmac(data_dic):
         result = database_helper.get_user_data_by_email(data_dic["API Key"])
         return json.dumps({"success" : True, "message" : "User data received!", "data" : result}), 200
     else:
@@ -191,11 +195,11 @@ def connect_to_socket(email = None):
         global msg
         ws.send("email_req")
         email = ws.receive()
+        ws.send("salt_req")
+        salt = ws.receive()
         if (database_helper.check_if_user_logged_in(email) > 1):
-            new_msg = [email, database_helper.get_token_by_email(email)]
+            new_msg = [email, database_helper.get_token_by_email(email), salt]
             msg += [new_msg]
-            print(new_msg)
-
         ws_open = True
         while ws_open:
             ws.send("email_req")
@@ -205,11 +209,12 @@ def connect_to_socket(email = None):
                 ws.close()
                 ws_open = False
             else:
+                ws.send("salt_req")
+                salt = ws.receive()
                 for mess in msg:
-                    print(mess[0]  + " " + email + " " + mess[1]+ " " + token)
                     if(mess[0] == email and mess[1] != token):
                         msg.remove(mess)
-                        result = database_helper.sign_out(token)
+                        result = database_helper.sign_out(token, mess[2])
                         ws.send("logout_req")
                         message = ws.receive()
                         ws.close()

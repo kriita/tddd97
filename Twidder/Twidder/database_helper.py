@@ -35,10 +35,11 @@ def sign_in(email, password):
     if len(rows) == 0:
         return False
     token = generate_token()
+    salt = randomString()
     cursor = get_db().cursor()
-    cursor.execute("insert into logged_in values('"+ email + "','" + token + "');")
+    cursor.execute("insert into logged_in values('"+ email + "','" + token + "','" + salt + "');")
     get_db().commit()
-    return token
+    return {"token" : token, "salt" : salt}
 
 def save_user(email, password, name, familyName, gender, city, country):
     # Saves a user in the database after signup #
@@ -47,10 +48,11 @@ def save_user(email, password, name, familyName, gender, city, country):
     get_db().commit()
     return True
     
-def sign_out(token):
+def sign_out(token, salt):
     # Signs a user out of the server #
     cursor = get_db().cursor()
-    cursor.execute("delete from logged_in where token like '"+ token + "';")
+    print(token)
+    cursor.execute("delete from logged_in where token like '"+ token + "' and salt like '" + salt + "';")
     get_db().commit()
     cursor.close()
     return True
@@ -171,7 +173,7 @@ def get_user_messages_by_token(token):
     cursor.close()
     return get_user_messages_by_email(token, data[0][0])
 
-def get_user_messages_by_email(email):¨
+def get_user_messages_by_email(email):
     # Returns the messages of the user with specified email #
     cursor = get_db().cursor()
     cursor.execute("select * from messages where target like '" + email + "';")
@@ -216,6 +218,11 @@ def compare_hmac(old_body):
     token = get_token_by_email(api_key)
 
     new_hash = hash256(body, token, HMAC) if token else ""
+
+    print(old_body)
+    print(HMAC)
+    print(token)
+    print(new_hash)
     
     return HMAC == new_hash
 

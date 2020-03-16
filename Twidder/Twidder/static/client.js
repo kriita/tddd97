@@ -164,12 +164,15 @@ validateNewPassword=function(){
 
 
 signout = function() {
-  sendRequest("POST", "/sign_out", {}, signout_callback);
+  var salt = localStorage.getItem("salt");
+  var request = {"salt" : salt};
+  sendRequest("POST", "/sign_out", request, signout_callback);
   return false
 }
 
 signout_callback = function(response){
   localStorage.removeItem("token");
+  localStorage.removeItem("salt");
   displayView(document.getElementById('welcomeview'));
   current_tab = "home";
 }
@@ -210,8 +213,10 @@ signin=function(form){
 
 signin_Callback=function(response){
   if(response["success"]){
-    var token = response["data"]["token"]
+    var token = response["data"]["token"];
+    var salt = response["data"]["salt"];
     localStorage.setItem("token", token);
+    localStorage.setItem("salt", salt);
     displayView(document.getElementById('profileView'));
     displayUserInfoOnLoad();
     displayAccountMessages();
