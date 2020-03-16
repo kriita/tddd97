@@ -126,10 +126,11 @@ def forgot_password(data = None):
 @app.route('/get_user_data_by_token', methods = ['GET'])
 def get_user_data_by_token(data = None):
     # Request route that returns the sender's data by using the token, used when looking up other users on the webpage. #
+    
     data = request.args.get("data")
     data_dic = json.loads(data)
 
-    if not database_helper.compare_hmac(data_dic):
+    if database_helper.compare_hmac(data_dic):
         result = database_helper.get_user_data_by_email(data_dic["API Key"])
         return json.dumps({"success" : True, "message" : "User data received!", "data" : result}), 200
     else:

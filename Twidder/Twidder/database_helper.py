@@ -223,6 +223,7 @@ def compare_hmac(old_body):
     print(HMAC)
     print(token)
     print(new_hash)
+    print(HMAC == new_hash)
     
     return HMAC == new_hash
 
