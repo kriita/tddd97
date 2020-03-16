@@ -33,12 +33,12 @@ forgotPasswordView=function(){
 
 //Send request to server using XMLHttpRequest
 sendRequest=function(type, url, request_body, callBack){  
-
   if(request_body){
     request_body["API Key"]=email;
   } else {
   	request_body = {"API Key" : email};
   }
+  request_body["salt"] = localStorage.getItem("salt");
   request_body["HMAC"] = encryptJSON(request_body);
   url += "?data=" + JSON.stringify(request_body);
 
@@ -77,7 +77,7 @@ encryptJSON=function(object){
 
 
 displayUserInfoOnLoad=function(){
-  sendRequest("GET", "/get_user_data_by_token" , null, displayUserInfoOnLoad_Callback)
+  sendRequest("GET", "/get_user_data_by_email" , {"email" : window.email}, displayUserInfoOnLoad_Callback)
 }
 
 displayUserInfoOnLoad_Callback = function(response){
@@ -313,29 +313,6 @@ displayAccountInfo = function(data, browse) {
 
 postMessageOnMyWall = function(form){
   postMessage(form, email);
-
-  // try{
-
-  //   var req = new XMLHttpRequest();
-  //   req.open("GET", "/get_user_data_by_token", true);
-  //   req.setRequestHeader("Content-type", "application/json");
-  //   req.onreadystatechange = function(){
-  //     if (this.readyState == 4){
-  //       if (this.status == 200){
-  //         response = JSON.parse(req.responseText);
-  //         postMessage(form, response["data"]["email"]);
-  //       }else if (this.status == 400){
-                    
-  //       }
-  //     }
-      
-  //   };
-  //   req.send(null);
-  // }
-  //   catch(e){
-  //     window.alert(e);
-  //   console.error(e);
-  // }
   return false;
 }
 

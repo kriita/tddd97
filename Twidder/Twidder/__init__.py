@@ -43,7 +43,6 @@ def signin():
     if not database_helper.check_if_user_in_database(data['email']):
         return json.dumps({"success" : False, "message" : "User doesn't exist!", "data" : {}}), 400
     result = database_helper.sign_in(data['email'], data['password'])
-
     if not result:
         return json.dumps({"success" : False, "message" : "Wrong password!", "data" : {}}), 400
     return json.dumps({"success" : True, "message" : "User logged in!", "data" : {"token" : result["token"], "salt" : result["salt"]}}), 200
@@ -75,14 +74,10 @@ def sign_out():
     # Request route to sign out a user from the webpage #
     raw_data = request.args.get("data")
     data = json.loads(raw_data)
-    print("KEY: " + data["API Key"])
-
     if not database_helper.compare_hmac(data):
-        print("Compare failed!")
         return json.dumps({"success" : False, "message" : "Invalid request!", "data" : {}}), 400
-    token = database_helper.get_token_by_email(data["API Key"])
+    token = database_helper.get_token_by_email(data["API Key"], data["salt"])
     salt = data["salt"]
-    print("Salt: " + salt)
     result = database_helper.sign_out(token, salt)
     return json.dumps({"success" : True, "message" : "Signed out!", "data" : {}}), 200
 
@@ -199,13 +194,13 @@ def connect_to_socket(email = None):
         ws.send("salt_req")
         salt = ws.receive()
         if (database_helper.check_if_user_logged_in(email) > 1):
-            new_msg = [email, database_helper.get_token_by_email(email), salt]
+            new_msg = [email, database_helper.get_token_by_email(email, salt), salt]
             msg += [new_msg]
         ws_open = True
         while ws_open:
             ws.send("email_req")
             email = ws.receive()
-            token = database_helper.get_token_by_email(email)
+            token = database_helper.get_token_by_email(email, salt)
             if(not token):
                 ws.close()
                 ws_open = False
@@ -213,13 +208,9 @@ def connect_to_socket(email = None):
                 ws.send("salt_req")
                 salt = ws.receive()
                 for mess in msg:
-                    print("Mess email: " + mess[0])
-                    print("Mess salt: " + mess[2])
-                    print("OG email: " + email + " og salt: " + salt)
                     if(mess[0] == email and mess[2] != salt):
-                        print("About to remove old user...")
                         msg.remove(mess)
-                        result = database_helper.sign_out(token, mess[2])
+                        result = database_helper.sign_out(token, salt)
                         ws.send("logout_req")
                         message = ws.receive()
                         ws.close()

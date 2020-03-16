@@ -131,10 +131,10 @@ def disconnect_db():
 
 ### GET Functions ###
 
-def get_token_by_email(email):
+def get_token_by_email(email, salt):
     # Returns the token of the user with specified email if logged in, otherwise returns false #
     cursor = get_db().cursor()
-    cursor.execute("select token from logged_in where email like '" + email + "';")
+    cursor.execute("select token from logged_in where email like '" + email + "' and salt like '" + salt + "';")
     token = cursor.fetchall()
     cursor.close()
     if(not token):
@@ -186,7 +186,6 @@ def check_if_user_logged_in(email):
     cursor.execute("select * from logged_in where email like '" + email + "';")
     messages = cursor.fetchall()
     cursor.close()
-    print(len(messages))
     return len(messages)
 
 def check_if_user_logged_in_token(token):
@@ -215,7 +214,7 @@ def compare_hmac(old_body):
     body = old_body
     HMAC = body.pop("HMAC")
     api_key = body["API Key"]
-    token = get_token_by_email(api_key)
+    token = get_token_by_email(api_key, body["salt"])
 
     new_hash = hash256(body, token, HMAC) if token else ""
     
