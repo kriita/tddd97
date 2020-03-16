@@ -51,7 +51,6 @@ def save_user(email, password, name, familyName, gender, city, country):
 def sign_out(token, salt):
     # Signs a user out of the server #
     cursor = get_db().cursor()
-    print(token)
     cursor.execute("delete from logged_in where token like '"+ token + "' and salt like '" + salt + "';")
     get_db().commit()
     cursor.close()
@@ -187,6 +186,7 @@ def check_if_user_logged_in(email):
     cursor.execute("select * from logged_in where email like '" + email + "';")
     messages = cursor.fetchall()
     cursor.close()
+    print(len(messages))
     return len(messages)
 
 def check_if_user_logged_in_token(token):
@@ -218,12 +218,6 @@ def compare_hmac(old_body):
     token = get_token_by_email(api_key)
 
     new_hash = hash256(body, token, HMAC) if token else ""
-
-    print(old_body)
-    print(HMAC)
-    print(token)
-    print(new_hash)
-    print(HMAC == new_hash)
     
     return HMAC == new_hash
 

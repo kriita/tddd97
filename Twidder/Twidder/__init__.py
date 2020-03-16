@@ -213,7 +213,11 @@ def connect_to_socket(email = None):
                 ws.send("salt_req")
                 salt = ws.receive()
                 for mess in msg:
-                    if(mess[0] == email and mess[1] != token):
+                    print("Mess email: " + mess[0])
+                    print("Mess salt: " + mess[2])
+                    print("OG email: " + email + " og salt: " + salt)
+                    if(mess[0] == email and mess[2] != salt):
+                        print("About to remove old user...")
                         msg.remove(mess)
                         result = database_helper.sign_out(token, mess[2])
                         ws.send("logout_req")

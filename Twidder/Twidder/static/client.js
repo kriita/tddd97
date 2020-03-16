@@ -411,7 +411,8 @@ socketConnection=function(){
     	localStorage.removeItem("token");
     	displayView(document.getElementById('welcomeview'));
     	current_tab = "home";
-
-    };
+    } else if(event_data == "salt_req"){
+      socket.send(localStorage.getItem("salt"));
+    }
   };
 }
